@@ -1,6 +1,121 @@
 {
   "rules": {
+    //If the user isn't authenticated, don't let them do anything
     ".read": "auth != null",
-    ".write": "auth != null"
+    ".write": "auth != null",
+
+    //allows users to read and write what documents they would have access to
+    // not actually secure, but is a sort of placeholder
+    //possible way to do this - user doesnt write, but when a user is added to a doc
+    // use firebase functions to add that doc to the user's table entry
+    "users": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid"
+      }
+    },
+    //Check "users" for the uid, then see if an entry matches the docid
+    //as it is now, if the user has access they can change anything - 
+    //  might want to add an 'owner' to prevent some data from changing
+    "docs": {
+      "$docid": {
+        ".write": "root.child('users/' + auth.uid + '/' + $docid).exists() && root.child('users/' + auth.uid + '/' + $docid).val() == true",
+        ".read": "root.child('users/' + auth.uid + '/' + $docid).exists() && root.child('users/' + auth.uid + '/' + $docid).val() == true"
+      }
+    }
   }
 }
+
+/*
+structure of db:
+{
+  "users": {
+    "uid": {
+      "docid": true,
+      "docid": true,
+    },
+    "uid": {
+      "docid": true
+    }
+  },
+  "docs": {
+    "docid": {
+      "title": "Some String",
+      "users": {
+        "uid": true,
+        "uid": true
+      },
+      //http://firebase.googleblog.com/2014/04/best-practices-arrays-in-firebase.html
+      //arrays are stored internally as objects with int keys, but thats all the same
+      "people": [
+        "Bob", "Name2", "Name3"
+      ],
+      "userstories": [
+        {
+          "title": "As a user, i want to something",
+          "notes": "Some string",
+          "tasks": [
+            {
+              "title": "Do something with some code",
+              "notes": "maybe put a helpful link here",
+              "estimatedTime": 3,
+              "actualTime": NULL,
+              "assignedTo": 1,
+              "progress": "inprogress"
+            },
+            {
+              "title": "Do something else with some code",
+              "notes": "maybe put a helpful link here",
+              "estimatedTime": 6,
+              "actualTime": 4,
+              "assignedTo": 2,
+              "progress": "completed"
+            },
+            {
+              "title": "Do something else",
+              "notes": "maybe put a helpful link here",
+              "estimatedTime": 2,
+              "actualTime": NULL,
+              "assignedTo": 1,
+              "progress": "notstarted"
+            }
+          ]
+        },
+        {
+          "title": "As a user, i want to something else",
+          "notes": "Some string",
+          "tasks": [
+            {
+              "title": "Do something with some code",
+              "notes": "maybe put a helpful link here",
+              "estimatedTime": 3,
+              "actualTime": NULL,
+              "assignedTo": 0,
+              "progress": "inprogress"
+            },
+            {
+              "title": "Do something else with some code",
+              "notes": "maybe put a helpful link here",
+              "estimatedTime": 6,
+              "actualTime": 4,
+              "assignedTo": 0,
+              "progress": "completed"
+            }
+          ]
+        }
+      ]
+    },
+    "docid": {
+      "title": "Some String",
+      "users": {
+        "uid": true
+      },
+      "people": [
+        "Bob"
+      ],
+      "userstories": []
+    }
+  }
+}
+
+ */
