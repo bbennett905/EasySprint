@@ -11,7 +11,11 @@
     "users": {
       "$uid": {
         ".write": "$uid === auth.uid",
-        ".read": "$uid === auth.uid"
+        ".read": "$uid === auth.uid",
+
+        "$docid": {
+          ".validate": "newData.isBoolean()"
+        }
       }
     },
     //Check "users" for the uid, then see if an entry matches the docid
@@ -20,7 +24,54 @@
     "docs": {
       "$docid": {
         ".write": "root.child('users/' + auth.uid + '/' + $docid).exists() && root.child('users/' + auth.uid + '/' + $docid).val() == true",
-        ".read": "root.child('users/' + auth.uid + '/' + $docid).exists() && root.child('users/' + auth.uid + '/' + $docid).val() == true"
+        ".read": "root.child('users/' + auth.uid + '/' + $docid).exists() && root.child('users/' + auth.uid + '/' + $docid).val() == true",
+
+        "title": {
+          ".validate": "newData.isString()"
+        },
+        "users": {
+          "$uid": {
+            ".validate": "newData.isBoolean()"
+          }
+        },
+        "people": {
+          "$index": {
+            ".validate": "newData.isString()"
+          }
+        },
+        "userStories": {
+          "$index": {
+            "title": {
+              ".validate": "newData.isString()"
+            },
+            "notes": {
+              ".validate": "newData.isString()"
+            },
+            "tasks": {
+              "$taskIndex": {
+                "title": {
+                  ".validate": "newData.isString()"
+                },
+                "notes": {
+                  ".validate": "newData.isString()"
+                },
+                "estimatedTime": {
+                  ".validate": "newData.isNumber()"
+                },
+                "actualTime": {
+                  ".validate": "newData.isNumber()"
+                },
+                "assignedTo": {
+                  ".validate": "newData.isNumber() && root.child('docs/' + $docid + '/people').hasChild(newData.val())"
+                },
+                "progress": {
+                  //Check that not only is it a string, but its one of these possibilities
+                  ".validate": "newData.isString() && (newData.val() == 'inprogress' || newData.val() == 'completed' || newData.val() == 'notstarted' || newData.val() == 'failed')"
+                }
+              }
+            }
+          }
+        }        
       }
     }
   }
@@ -50,7 +101,7 @@ structure of db:
       "people": [
         "Bob", "Name2", "Name3"
       ],
-      "userstories": [
+      "userStories": [
         {
           "title": "As a user, i want to something",
           "notes": "Some string",
