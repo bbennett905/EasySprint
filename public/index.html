@@ -5,74 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Welcome to Firebase Hosting</title>
 
-    <!-- <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script> -->
+    <!-- Add all necessary firebase modules -->
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyDzThR8pI3ai8pQzTYg--r1fdr5_-_AySU",
-        authDomain: "cs252-webapp.firebaseapp.com",
-        databaseURL: "https://cs252-webapp.firebaseio.com",
-        projectId: "cs252-webapp",
-        storageBucket: "cs252-webapp.appspot.com",
-        messagingSenderId: "276240184404"
-      };
-      firebase.initializeApp(config);
-    </script>
+    <!-- Firebase initialization -->
+    <script src="config.js"></script>
 
+    <!-- Bootstrap stuff -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- initialize the SDK after all desired features are loaded -->
-    <!-- <script defer src="/__/firebase/init.js"></script> -->
-
+    <!-- Firebase auth stuff -->
     <script src="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
-    <script type="text/javascript">
-      // FirebaseUI config.
-      var uiConfig = {
-        callbacks: {
-          // Called when the user has been successfully signed in.
-          signInSuccess: function(user, credential, redirectUrl) {
-            handleSignedInUser(user);
-            // Do not redirect.
-            return false;
-          }
-        },
-        // Opens IDP Providers sign-in flow in a popup.
-        signInFlow: 'popup',
-        signInOptions: [
-          // Leave the lines as is for the providers you want to offer your users.
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID
-        ],
-        // Terms of service url.
-        tosUrl: '<your-tos-url>' //TODO
-      };
-
-      // Initialize the FirebaseUI Widget using Firebase.
-      var ui = new firebaseui.auth.AuthUI(firebase.auth());
-      // The start method will wait until the DOM is loaded.
-      ui.start('#firebaseui-auth-container', uiConfig);
-    </script>
-
-    <!-- <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style> -->
   </head>
+
   <body>
     <div id="message">
       <h2>Welcome</h2>
@@ -91,80 +40,15 @@
     <!-- anything to display when logged in -->
     <div id="logged-in">
       <h3>Logged in!</h3>
-      <p><button id="sign-out">Sign Out</button></p>
+      <p>
+        <button id="sign-out">Sign Out</button>
+        <button id="test-button">Test DB</button>
+      </p>
+      <p id="docslist">
+        Loading your docs...
+      </p>
     </div>
 
-    <script>
-      window.addEventListener('load', function() {
-        document.getElementById('sign-out').addEventListener('click', function() {
-          firebase.auth().signOut();
-        });
-      });
-      document.addEventListener('DOMContentLoaded', function() {
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
-          document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
-        }
-        document.getElementById('logged-in').style.display = 'none';
-      });
-
-      
-      /**
-      * Displays the UI for a signed in user.
-      * @param {!firebase.User} user
-      */ 
-      var handleSignedInUser = function(user) {
-        document.getElementById('logged-in').style.display = 'block';
-        document.getElementById('logged-out').style.display = 'none';
-      };
-
-      /**
-      * Displays the UI for a signed out user.
-      */
-      var handleSignedOutUser = function() {
-        document.getElementById('logged-in').style.display = 'none';
-        document.getElementById('logged-out').style.display = 'block';
-        // FirebaseUI config.
-        var uiConfig = {
-          callbacks: {
-            // Called when the user has been successfully signed in.
-            signInSuccess: function(user, credential, redirectUrl) {
-              handleSignedInUser(user);
-              // Do not redirect.
-              return false;
-            }
-          },
-          // Opens IDP Providers sign-in flow in a popup.
-          signInFlow: 'popup',
-          signInOptions: [
-            // Leave the lines as is for the providers you want to offer your users.
-            firebase.auth.GoogleAuthProvider.PROVIDER_ID
-          ],
-          // Terms of service url.
-          tosUrl: '<your-tos-url>' //TODO
-        };
-        ui.start('#firebaseui-auth-container', uiConfig);
-      };
-
-      // Listen to change in auth state so it displays the correct UI for when
-      // the user is signed in or not.
-      firebase.auth().onAuthStateChanged(function(user) {
-        user ? handleSignedInUser(user) : handleSignedOutUser();
-      });
-    </script>
+    <script src="app.js"></script>
   </body>
 </html>
