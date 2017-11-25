@@ -34,7 +34,16 @@
     <script type="text/javascript">
       // FirebaseUI config.
       var uiConfig = {
-        signInSuccessUrl: '<url-to-redirect-to-on-success>', //TODO
+        callbacks: {
+          // Called when the user has been successfully signed in.
+          signInSuccess: function(user, credential, redirectUrl) {
+            handleSignedInUser(user);
+            // Do not redirect.
+            return false;
+          }
+        },
+        // Opens IDP Providers sign-in flow in a popup.
+        signInFlow: 'popup',
         signInOptions: [
           // Leave the lines as is for the providers you want to offer your users.
           firebase.auth.GoogleAuthProvider.PROVIDER_ID
@@ -69,13 +78,28 @@
       <h2>Welcome</h2>
       <h1>Firebase Hosting Setup Complete</h1>
       <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
     </div>
     <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <div id="firebaseui-auth-container"></div>
+    <!-- anything that should only be displayed when logged out goes in here -->
+    <div id="logged-out">
+      <div id="firebaseui-spa">
+        <div id="firebaseui-auth-container"></div>
+      </div>
+    </div>
+
+    <!-- anything to display when logged in -->
+    <div id="logged-in">
+      <h3>Logged in!</h3>
+      <p><button id="sign-out">Sign Out</button></p>
+    </div>
 
     <script>
+      window.addEventListener('load', function() {
+        document.getElementById('sign-out').addEventListener('click', function() {
+          firebase.auth().signOut();
+        });
+      });
       document.addEventListener('DOMContentLoaded', function() {
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
         // // The Firebase SDK is initialized and available here!
@@ -95,6 +119,51 @@
           console.error(e);
           document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
         }
+        document.getElementById('logged-in').style.display = 'none';
+      });
+
+      
+      /**
+      * Displays the UI for a signed in user.
+      * @param {!firebase.User} user
+      */ 
+      var handleSignedInUser = function(user) {
+        document.getElementById('logged-in').style.display = 'block';
+        document.getElementById('logged-out').style.display = 'none';
+      };
+
+      /**
+      * Displays the UI for a signed out user.
+      */
+      var handleSignedOutUser = function() {
+        document.getElementById('logged-in').style.display = 'none';
+        document.getElementById('logged-out').style.display = 'block';
+        // FirebaseUI config.
+        var uiConfig = {
+          callbacks: {
+            // Called when the user has been successfully signed in.
+            signInSuccess: function(user, credential, redirectUrl) {
+              handleSignedInUser(user);
+              // Do not redirect.
+              return false;
+            }
+          },
+          // Opens IDP Providers sign-in flow in a popup.
+          signInFlow: 'popup',
+          signInOptions: [
+            // Leave the lines as is for the providers you want to offer your users.
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID
+          ],
+          // Terms of service url.
+          tosUrl: '<your-tos-url>' //TODO
+        };
+        ui.start('#firebaseui-auth-container', uiConfig);
+      };
+
+      // Listen to change in auth state so it displays the correct UI for when
+      // the user is signed in or not.
+      firebase.auth().onAuthStateChanged(function(user) {
+        user ? handleSignedInUser(user) : handleSignedOutUser();
       });
     </script>
   </body>
