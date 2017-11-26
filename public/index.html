@@ -23,32 +23,35 @@
   </head>
 
   <body>
-    <div id="message">
+    <div class="container-fluid">
       <h2>Welcome</h2>
       <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
-
-    <!-- anything that should only be displayed when logged out goes in here -->
-    <div id="logged-out">
-      <div id="firebaseui-spa">
-        <div id="firebaseui-auth-container"></div>
+      <div class="row">
+        <div class="col-sm-8">
+          <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
+          <p id="load">Firebase SDK Loading&hellip;</p>
+        </div>
+        <div class="col-sm-4">
+          <!-- anything that should only be displayed when logged out goes in here -->
+          <div id="logged-out">
+            <div id="firebaseui-spa">
+              <div id="firebaseui-auth-container"></div>
+            </div>
+          </div>
+        </div>
       </div>
+      <!-- anything to display when logged in -->
+      <div id="logged-in">
+          <h3>Logged in!</h3>
+          <p>
+            <button id="sign-out">Sign Out</button>
+            <button id="test-button">Test DB</button>
+          </p>
+          <p id="docslist">
+            Loading your docs...
+          </p>
+        </div>
+      <script src="app.js"></script>
     </div>
-
-    <!-- anything to display when logged in -->
-    <div id="logged-in">
-      <h3>Logged in!</h3>
-      <p>
-        <button id="sign-out">Sign Out</button>
-        <button id="test-button">Test DB</button>
-      </p>
-      <p id="docslist">
-        Loading your docs...
-      </p>
-    </div>
-
-    <script src="app.js"></script>
   </body>
 </html>

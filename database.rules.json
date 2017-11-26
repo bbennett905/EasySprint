@@ -8,6 +8,17 @@
     // not actually secure, but is a sort of placeholder
     //possible way to do this - user doesnt write, but when a user is added to a doc
     // use firebase functions to add that doc to the user's table entry
+    // something like: - won't work for creating new doc, only adding users!
+    //    on db write to /docs/$docid/users/
+    //      foreach child of node
+    //        /users/ child.key /$docid = child.val
+    // may need to instead, have another 'table': 'newdocs'
+    //  entrys indexed as if array, has userid: true
+    //  allows anyone to write to it, and when functions sees a write to it:
+    //    create doc and add to users table: child(/$userid)
+    //  in client, listen for uid docs list change then open the new doc
+    //using both of those together should work
+    //needs users set to allow write from functions only
     "users": {
       "$uid": {
         ".write": "$uid === auth.uid",
