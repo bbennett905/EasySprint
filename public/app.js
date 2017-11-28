@@ -31,13 +31,11 @@ window.addEventListener('load', function() {
 	document.getElementById('sign-out').addEventListener('click', function() {
 		firebase.auth().signOut();
 	});
-	document.getElementById('test-button').addEventListener('click', function() {
-		db.ref('users/' + firebase.auth().currentUser.uid).set({
-			"somedoc": true,
-			"anotherdoc": false,
-			"athirddoc": true
-		});
-		
+	document.getElementById('test-buttona').addEventListener('click', function() {
+		db.ref('newDocs/' + firebase.auth().currentUser.uid).set(true);
+	});
+	document.getElementById('test-buttonb').addEventListener('click', function() {
+		db.ref('docs/1/users/fakeuid').set(true);
 	});
 });
 
