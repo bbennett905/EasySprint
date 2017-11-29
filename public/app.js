@@ -39,12 +39,16 @@ window.addEventListener('load', function() {
 	});
 
 	var numRows = 1;
+	function getNumRows() {
+		return numRows;
+
+    }
 	document.getElementById('add_row').addEventListener('click', function() {
 		var table = document.getElementById('people-table');
 		var row = table.insertRow(table.rows.length);
 		var inputRow = table.rows[1];
 
-		row.insertCell(0);
+		row.insertCell(0).innerHTML = document.getElementById('people-table-input-task').value;
 		row.insertCell(1).innerHTML = document.getElementById('people-table-input-name').value;
 		row.insertCell(2).innerHTML = document.getElementById('people-table-input-mail').value;
 		row.insertCell(3).innerHTML = document.getElementById('people-table-input-phone').value;
