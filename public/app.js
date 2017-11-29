@@ -37,6 +37,37 @@ window.addEventListener('load', function() {
 	document.getElementById('test-buttonb').addEventListener('click', function() {
 		db.ref('docs/1/users/fakeuid').set(true);
 	});
+
+	var numRows = 1;
+	document.getElementById('add_row').addEventListener('click', function() {
+		var table = document.getElementById('people-table');
+		var row = table.insertRow(table.rows.length);
+		var inputRow = table.rows[1];
+
+		row.insertCell(0);
+		row.insertCell(1).innerHTML = document.getElementById('people-table-input-name').value;
+		row.insertCell(2).innerHTML = document.getElementById('people-table-input-mail').value;
+		row.insertCell(3).innerHTML = document.getElementById('people-table-input-phone').value;
+		
+		/*document.getElementById('addr' + numRows).innerHtml = "<td>" + (numRows + 1) + 
+			"</td><td><input name='name" + numRows + 
+			"' type='text' placeholder='Name' class='form-control input-md'  /> </td><td><input  name='mail" + 
+			numRows + "' type='text' placeholder='Mail'  class='form-control input-md'></td><td><input  name='mobile" +
+			numRows + "' type='text' placeholder='Mobile'  class='form-control input-md'></td>";
+		console.log(document.getElementById('tab_logic').innerHTML);
+		document.getElementById('tab_logic').innerHTML += '<tr id="addr'+(numRows+1)+'"></tr>';
+		console.log(document.getElementById('tab_logic').innerHTML);*/
+		numRows++;
+	});
+	document.getElementById('delete_row').addEventListener('click', function() {
+		if (numRows > 1) {
+			var table = document.getElementById('people-table');
+			table.deleteRow(table.rows.length - 1);
+			numRows--;
+		} else {
+			//should give a warning or something here
+		}
+	});
 });
 
 document.addEventListener('DOMContentLoaded', function() {
