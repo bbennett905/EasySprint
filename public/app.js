@@ -89,15 +89,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
 var onUidDocsChanged = function (snapshot) {
 	document.getElementById('docslist').innerHTML = "";
+	document.getElementById('docslist-add').innerHTML = "";
+	document.getElementById('docslist-head').innerHTML = "Your docs:";
 	var count = 0;
+
+	var e = document.createElement("BUTTON");
+	e.type = "button";
+	e.classList.add("btn");
+	e.classList.add("btn-primary");
+	e.classList.add("btn-sm");
+	e.value = "Create a new doc";
+	e.innerHTML = "<span class=\"glyphicon glyphicon-plus\"></span> Create Doc";
+	e.onClick = function() {
+		//TODO do something
+	};
+	document.getElementById('docslist-add').appendChild(e);
+	
+
 	snapshot.forEach(function (snapshot) {
 		if (snapshot.val()) {
-			document.getElementById('docslist').innerHTML += snapshot.key + ", ";
+			e = document.createElement("BUTTON");
+			e.type = "button";
+			e.classList.add("btn");
+			e.classList.add("btn-primary");
+			e.classList.add("btn-block");
+			e.value = snapshot.key; //TODO should be doc name
+			e.innerHTML = snapshot.key;
+			e.onClick = function() {
+				//TODO do something
+			};
+			document.getElementById('docslist').appendChild(e);
+			document.getElementById('docslist').innerHTML += "<br>";
+			//innerHTML += snapshot.key + ", ";
 			count++;
 		}
 	});
+	
 	if (count == 0) {
-		document.getElementById('docslist').innerHTML = "You aren't in any docs, create one!";
+		document.getElementById('docslist-head').innerHTML = "You aren't in any docs, create one!";
 	}
 };	
 
