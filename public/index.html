@@ -24,11 +24,9 @@
 
   <body>
     <div class="container-fluid">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
+      <h1>Title <small>Subtitle</small></h1>
       <div class="row">
         <div class="col-sm-8">
-          <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
           <p id="load">Firebase SDK Loading&hellip;</p>
         </div>
         <div class="col-sm-4">
@@ -41,18 +39,28 @@
         </div>
       </div>
       <!-- anything to display when logged in -->
-      <a id="logged-in">
-          <h3>Logged in!</h3>
-          <p>
-            <button id="sign-out">Sign Out</button>
-            <button id="test-buttona">Test DB A - create</button>
-            <button id="test-buttonb">Test DB B - add user</button>
-          </p>
-          <p id="docslist">
-            Loading your docs...
-          </p>
-        <a href="testDocHtml.html"> Create New Document</a>
-      </a>
+      <div id="logged-in">
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="row panel panel-default">
+              <h3 class="col-xs-8" id="docslist-head">Loading your docs...</h3>
+              <h4 class="col-xs-4" id="docslist-add"></h4>
+            </div>
+            <p id="docslist">
+    
+            </p>
+          </div>
+          <div class="col-sm-4">
+            <h3>Logged in!</h3>
+            <p>
+              <a href="testDocHtml.html"> Create New Document</a>
+              <button id="sign-out">Sign Out</button>
+              <button id="test-buttona">Test DB A - create</button>
+              <button id="test-buttonb">Test DB B - add user</button>
+            </p>
+          </div>
+        </div>
+      </div>
       <div class="row clearfix">
         <div class="col-md-12 column">
             <table class="table table-bordered table-hover" id="people-table">
