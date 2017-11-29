@@ -15,7 +15,6 @@
         //Users shouldn't write directly to this - everything goes through
         //  cloud functions instead. Users are added here when a new doc is
         //  created or when they are added to a doc.
-        //".write": "$uid === auth.uid",
         ".read": "$uid === auth.uid",
 
         "$docid": {
@@ -34,6 +33,15 @@
         "title": {
           ".validate": "newData.isString()"
         },
+        "notes": {
+          ".validate": "newData.isString()"
+        },
+        "schedule": {
+          ".validate": "newData.isString()"
+        },
+        "risks": {
+          ".validate": "newData.isString()"
+        },
         "users": {
           "$uid": {
             ".validate": "newData.isBoolean()"
@@ -41,8 +49,19 @@
         },
         "people": {
           "$index": {
-            ".validate": "newData.isString()"
+            "name": {
+              ".validate": "newData.isString()"
+            },
+            "email": {
+              ".validate": "newData.isString()"
+            },
+            "phone": {
+              ".validate": "newData.isString()"
+            }
           }
+        },
+        "master": {
+          ".validate": "newData.isNumber() && root.child('docs/' + $docid + '/people').hasChild(newData.val())"
         },
         "userStories": {
           "$index": {
@@ -74,6 +93,11 @@
                   ".validate": "newData.isString() && (newData.val() == 'inprogress' || newData.val() == 'completed' || newData.val() == 'notstarted' || newData.val() == 'failed')"
                 }
               }
+            },
+            "acceptanceCriteria": {
+              "$index": {
+                ".validate": "newData.isString()"
+              }
             }
           }
         }        
@@ -83,7 +107,7 @@
 }
 
 /*
-structure of db:
+approximate structure of db:
 {
   "users": {
     "uid": {
