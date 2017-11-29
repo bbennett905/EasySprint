@@ -1,19 +1,21 @@
 function intro() {
     //create P elements for everything
     //had to create a separate P element for each Textarea so it looks formatted correctly
-    var para = document.createElement("P");
+    var planningDocName = document.createElement("h1");
+
+    var para = document.createElement("h3");
     var paraSub = document.createElement("P");
     var paraSubmit = document.createElement("P");
 
-    var para2 = document.createElement("P");
+    var para2 = document.createElement("h3");
     var paraSub2 = document.createElement("P");
     var paraSubmit2 = document.createElement("P");
 
-    var para3 = document.createElement("P");
+    var para3 = document.createElement("h3");
     var paraSub3 = document.createElement("P");
     var paraSubmit3 = document.createElement("P");
 
-    var para4 = document.createElement("P");
+    var para4 = document.createElement("h3");
     var paraSub4 = document.createElement("P");
     var paraSubmit4 = document.createElement("P");
 
@@ -51,11 +53,15 @@ function intro() {
     submit4.style.padding ="5px";
 
 
-    //
+
     var sO ="Sprint Overview: ";
     var sM ="Scrum Master: ";
     var wMP ="Weekly Meeting Plan: ";
     var risks = "Risks and Challenges: ";
+
+    var placeHolderNode = document.createTextNode("[Insert Sprint Planning Doc Name here]");
+    planningDocName.appendChild(placeHolderNode);
+
     var t = document.createTextNode(sO);
     para.appendChild(t);
     paraSub.appendChild(sprintText);
@@ -76,6 +82,7 @@ function intro() {
     paraSub4.appendChild(risksText);
     paraSubmit4.appendChild(submit4);
 
+    document.getElementById("myDIV").appendChild(planningDocName);
 
     document.getElementById("myDIV").appendChild(para);
     document.getElementById("myDIV").appendChild(paraSub);
