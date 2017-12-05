@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <title>Sprint Planner</title>
 
     <!-- Add all necessary firebase modules -->
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
@@ -26,10 +26,10 @@
 
   <body>
     <div class="container-fluid">
-      <h1>Title <small>Subtitle</small></h1>
+      <h1>Sprint Planner <small>Create and share Scrum planning documents</small></h1>
       <div class="row">
         <div class="col-sm-8">
-          <p id="load">Firebase SDK Loading&hellip;</p>
+
         </div>
         <div class="col-sm-4">
           <!-- anything that should only be displayed when logged out goes in here -->
@@ -47,16 +47,11 @@
             <h4>Logged in as <span id="user-name"></span></h4>
             <h5 id="user-email"></h5>
             <p>
-              <a href="testDocHtml.html"> Create New Document</a>
               <div class="hidden-sm hidden-md hidden-lg hidden-xl btn-group">
                   <button id="sign-out" type="button" class="btn btn-primary">Sign Out</button>
-                  <button id="test-buttona" type="button" class="btn btn-primary">Test DB A - create</button>
-                  <button id="test-buttonb" type="button" class="btn btn-primary">Test DB B - add user</button>
               </div>
               <div class="hidden-xs btn-group btn-group-vertical">
                 <button id="sign-out" type="button" class="btn btn-primary">Sign Out</button>
-                <button id="test-buttona" type="button" class="btn btn-primary">Test DB A - create</button>
-                <button id="test-buttonb" type="button" class="btn btn-primary">Test DB B - add user</button>
               </div>
             </p>
           </div>
@@ -71,48 +66,7 @@
             </div>
         </div>
       </div>
-      <div class="row clearfix">
-        <div class="col-md-12 column">
-            <table class="table table-bordered table-hover" id="people-table">
-                <thead>
-                <tr >
-                    <th class="text-center">
-                        Task #
-                    </th>
-                    <th class="text-center">
-                        Task
-                    </th>
-                    <th class="text-center">
-                        Hour Estimate
-                    </th>
-                    <th class="text-center">
-                        Assigned to
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr id='addr0'>
-                    <td>
-                        <input type="text" name='number0' placeholder='#' class="form-control" id="people-table-input-task"/>
-                    </td>
-                    <td>
-                        <input type="text" name='name0' placeholder='Name' class="form-control" id="people-table-input-name"/>
-                    </td>
-                    <td>
-                        <input type="text" name='mail0' placeholder='Mail' class="form-control" id="people-table-input-mail"/>
-                    </td>
-                    <td>
-                        <input type="text" name='mobile0' placeholder='Mobile' class="form-control" id="people-table-input-phone"/>
-                    </td>
-                </tr>
-                <tr id='addr1'></tr>
-                </tbody>
-            </table>
-        </div>
     </div>
-    <a id="add_row" class="btn btn-default pull-left">Add Row</a><a id='delete_row' class="pull-right btn btn-default">Delete Row</a>
-        </div>
-      <script src="app.js"></script>
-    </div>
+    <script src="app.js"></script>
   </body>
 </html>

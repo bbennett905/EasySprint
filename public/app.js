@@ -77,18 +77,9 @@ window.addEventListener('load', function() {
 document.addEventListener('DOMContentLoaded', function() {
 	// // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 	// // The Firebase SDK is initialized and available here!
-
-	try {
-		let app = firebase.app();
-		let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
-		document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
-	} catch (e) {
-		console.error(e);
-		document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+	if (!isLoggedIn) {
+		document.getElementById('logged-in').style.display = 'none';
 	}
-	
-	document.getElementById('logged-in').style.display = 'none';
-	document.getElementById('docslist').style.display = 'none';
 });
 
 var onUidDocsChanged = function (snapshot) {
@@ -151,11 +142,13 @@ var onUidDocsChanged = function (snapshot) {
 	}
 };	
 
+var isLoggedIn = false;
 /**
  * Displays the UI for a signed in user.
  * @param {!firebase.User} user
  */ 
 var handleSignedInUser = function(user) {
+	isLoggedIn = true;
 	document.getElementById('logged-in').style.display = 'block';
 	document.getElementById('logged-out').style.display = 'none';
 
@@ -171,6 +164,7 @@ var handleSignedInUser = function(user) {
  * Displays the UI for a signed out user.
  */
 var handleSignedOutUser = function() {
+	isLoggedIn = false;
 	document.getElementById('logged-in').style.display = 'none';
 	document.getElementById('logged-out').style.display = 'block';
 
