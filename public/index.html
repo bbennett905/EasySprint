@@ -27,17 +27,18 @@
   <body>
     <div class="container-fluid">
       <h1>Sprint Planner <small>Create and share Scrum planning documents</small></h1>
-      <div class="row">
-        <div class="col-sm-8">
-
-        </div>
-        <div class="col-sm-4">
-          <!-- anything that should only be displayed when logged out goes in here -->
-          <div id="logged-out">
+      <div id="logged-out">
+        <div class="row">
+        <!-- anything that should only be displayed when logged out goes in here -->
+          <div class="col-sm-4 user-col">
             <div id="firebaseui-spa">
               <div id="firebaseui-auth-container"></div>
             </div>
           </div>
+          <div class="col-sm-8">
+            TODO Put some nice text and explanation here!
+          </div>
+          
         </div>
       </div>
       <!-- anything to display when logged in -->
@@ -47,12 +48,7 @@
             <h4>Logged in as <span id="user-name"></span></h4>
             <h5 id="user-email"></h5>
             <p>
-              <div class="hidden-sm hidden-md hidden-lg hidden-xl btn-group">
-                  <button id="sign-out" type="button" class="btn btn-primary">Sign Out</button>
-              </div>
-              <div class="hidden-xs btn-group btn-group-vertical">
-                <button id="sign-out" type="button" class="btn btn-primary">Sign Out</button>
-              </div>
+              <button id="sign-out" type="button" class="btn btn-primary">Sign Out</button>
             </p>
           </div>
           <div class="col-sm-8">

@@ -28,50 +28,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 var db = firebase.database();
 
 window.addEventListener('load', function() {
-	document.getElementById('sign-out').addEventListener('click', function() {
-		firebase.auth().signOut();
-	});
-	document.getElementById('test-buttona').addEventListener('click', function() {
-		db.ref('newDocs/' + firebase.auth().currentUser.uid).set(true);
-	});
-	document.getElementById('test-buttonb').addEventListener('click', function() {
-		db.ref('docs/1/users/fakeuid').set(true);
-	});
-
-	var numRows = 1;
-	function getNumRows() {
-		return numRows;
-
-    }
-	document.getElementById('add_row').addEventListener('click', function() {
-		var table = document.getElementById('people-table');
-		var row = table.insertRow(table.rows.length);
-		var inputRow = table.rows[1];
-
-		row.insertCell(0).innerHTML = document.getElementById('people-table-input-task').value;
-		row.insertCell(1).innerHTML = document.getElementById('people-table-input-name').value;
-		row.insertCell(2).innerHTML = document.getElementById('people-table-input-mail').value;
-		row.insertCell(3).innerHTML = document.getElementById('people-table-input-phone').value;
-		
-		/*document.getElementById('addr' + numRows).innerHtml = "<td>" + (numRows + 1) + 
-			"</td><td><input name='name" + numRows + 
-			"' type='text' placeholder='Name' class='form-control input-md'  /> </td><td><input  name='mail" + 
-			numRows + "' type='text' placeholder='Mail'  class='form-control input-md'></td><td><input  name='mobile" +
-			numRows + "' type='text' placeholder='Mobile'  class='form-control input-md'></td>";
-		console.log(document.getElementById('tab_logic').innerHTML);
-		document.getElementById('tab_logic').innerHTML += '<tr id="addr'+(numRows+1)+'"></tr>';
-		console.log(document.getElementById('tab_logic').innerHTML);*/
-		numRows++;
-	});
-	document.getElementById('delete_row').addEventListener('click', function() {
-		if (numRows > 1) {
-			var table = document.getElementById('people-table');
-			table.deleteRow(table.rows.length - 1);
-			numRows--;
-		} else {
-			//should give a warning or something here
-		}
-	});
+	
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -82,7 +39,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 });
 
+var isWaiting = false;
 var onUidDocsChanged = function (snapshot) {
+	if (isWaiting) {
+		return;
+	}
+	console.log("onuiddocschanged");
 	document.getElementById('docslist').innerHTML = "";
 	document.getElementById('docslist-add').innerHTML = "";
 	document.getElementById('docslist-head').innerHTML = "Your docs:";
@@ -102,6 +64,7 @@ var onUidDocsChanged = function (snapshot) {
 	document.getElementById('docslist-add').appendChild(e);
 
 	snapshot.forEach(function (snapshot) {
+		console.log("foreach")
 		if (snapshot.val()) {
 			var div = document.createElement("div");
 			div.classList.add("btn-group");
@@ -127,8 +90,11 @@ var onUidDocsChanged = function (snapshot) {
 			};
 			count++;
 
+			isWaiting = true;
 			db.ref('docs/' + snapshot.key + "/title").once('value', function(innerSnap) {
-				button.value = innerSnap.val(); //TODO should be doc name
+				isWaiting = false;
+				console.log("got title");
+				button.value = innerSnap.val();
 				button.innerHTML = innerSnap.val();
 				div.appendChild(button);
 				div.appendChild(delDoc);
@@ -158,6 +124,10 @@ var handleSignedInUser = function(user) {
 
 	document.getElementById('user-name').innerHTML = user.displayName;
 	document.getElementById('user-email').innerHTML = user.email;
+	$('#sign-out').on('click', function() {
+		console.log("sign out");
+		firebase.auth().signOut();
+	});
 };
 
 /**
