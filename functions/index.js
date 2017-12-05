@@ -13,7 +13,6 @@ admin.initializeApp(functions.config().firebase);
  */
 exports.onNewDoc = functions.database.ref('/newDocs/{uid}').onCreate(event => {
 	const uid = event.params.uid;
-	console.log("onNewDoc: uid=" + uid);
 	
 	//Probably not the best way to do this, but I think it should work
 	var largestId = 0;
@@ -39,6 +38,7 @@ exports.onNewDoc = functions.database.ref('/newDocs/{uid}').onCreate(event => {
 		}).then(function(s) {
 			return Promise.all([
 				admin.database().ref('docs/' + newId + '/users/' + uid).set(true),
+				admin.database().ref('docs/' + newId + '/title').set("New Doc"),
 				admin.database().ref('users/' + uid + '/' + newId).set(true),
 				admin.database().ref('newDocs/' + uid).remove()	
 			]);
