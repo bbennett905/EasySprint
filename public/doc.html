@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sprint Planner</title>
+
+    <!-- Add all necessary firebase modules -->
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
+    <!-- Firebase initialization -->
+    <script src="config.js"></script>
+
+    <!-- Bootstrap stuff -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Firebase auth stuff -->
+    <script src="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
+    
+    <link type="text/css" rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <h1>Sprint Planner <small>Create and share Scrum planning documents</small></h1>
+      <div id="logged-out">
+        <div class="row">
+        <!-- anything that should only be displayed when logged out goes in here -->
+          <div class="col-sm-4 user-col">
+            
+          </div>
+          <div class="col-sm-8">
+            <h3>You are not logged in!</h3>
+            <h3><small><a href="index.html">Please go back to our main page, log in, and select a document</a></small></h3>
+          </div>
+        </div>
+      </div>
+      <!-- anything to display when logged in -->
+      <div id="logged-in">
+        <div class="row">
+          <div class="col-sm-4 user-col">
+            <h4>Logged in as <span id="user-name"></span></h4>
+            <h5 id="user-email"></h5>
+            <p>
+              <button id="sign-out" type="button" class="btn btn-primary">Sign Out</button>
+            </p>
+          </div>
+          <div class="col-sm-8">
+            document goes here. maybe have tabs for "doc", "stats" (or progress)
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="doc.js"></script>
+  </body>
+</html>
