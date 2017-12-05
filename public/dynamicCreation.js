@@ -27,11 +27,13 @@ function intro() {
     sprintText.setAttribute("cols","100");
     sprintText.setAttribute("readonly","true");
     sprintText.setAttribute("ondblclick","this.readOnly='';");
+    sprintText.setAttribute("id","sprintText");
 
     var scrumMaster = document.createElement("INPUT");
     scrumMaster.setAttribute("type","text");
     scrumMaster.setAttribute("readonly","true");
     scrumMaster.setAttribute("ondblclick","this.readOnly='';");
+    scrumMaster.setAttribute("id","scrumMaster");
 
     var planText = document.createElement("TEXTAREA");
     planText.setAttribute("type","text");
@@ -39,6 +41,7 @@ function intro() {
     planText.setAttribute("cols","100");
     planText.setAttribute("readonly","true");
     planText.setAttribute("ondblclick","this.readOnly='';");
+    planText.setAttribute("id","planText");
 
     var risksText = document.createElement("TEXTAREA");
     risksText.setAttribute("type","text");
@@ -46,19 +49,7 @@ function intro() {
     risksText.setAttribute("cols","100");
     risksText.setAttribute("readonly","true");
     risksText.setAttribute("ondblclick","this.readOnly='';");
-
-    var submit1 = document.createElement("INPUT");
-    submit1.setAttribute("type","submit");
-    submit1.style.padding ="5px";
-    var submit2 = document.createElement("INPUT");
-    submit2.setAttribute("type","submit");
-    submit2.style.padding ="5px";
-    var submit3 = document.createElement("INPUT");
-    submit3.setAttribute("type","submit");
-    submit3.style.padding ="5px";
-    var submit4 = document.createElement("INPUT");
-    submit4.setAttribute("type","submit");
-    submit4.style.padding ="5px";
+    risksText.setAttribute("id","risksText");
 
 
 
@@ -73,22 +64,18 @@ function intro() {
     var t = document.createTextNode(sO);
     para.appendChild(t);
     paraSub.appendChild(sprintText);
-    paraSubmit.appendChild(submit1);
 
     var t1 = document.createTextNode(sM);
     para2.appendChild(t1);
     paraSub2.appendChild(scrumMaster);
-    paraSubmit2.appendChild(submit2);
 
     var t2 = document.createTextNode(wMP);
     para3.appendChild(t2);
     paraSub3.appendChild(planText);
-    paraSubmit3.appendChild(submit3);
 
     var t3 = document.createTextNode(risks);
     para4.appendChild(t3);
     paraSub4.appendChild(risksText);
-    paraSubmit4.appendChild(submit4);
 
     document.getElementById("myDIV").appendChild(planningDocName);
 
@@ -114,6 +101,7 @@ function intro() {
 
 
 }
+
 window.addEventListener('load', function() {
     document.getElementById('sign-out').addEventListener('click', function() {
         firebase.auth().signOut();
@@ -159,4 +147,37 @@ window.addEventListener('load', function() {
             //should give a warning or something here
         }
     });
+    document.getElementById('sprintText').addEventListener('input',function () {
+       var sprintText  = document.getElementById('sprintText').valueOf();
+       console.log(sprintText);
+
+    });
+
+
 });
+
+//JQUERY attempt to try and get the text as soon as it is input
+$('#sprintText').bind('input', function() {
+    // var x  = $(this).val(); // get the current value of the input field.
+    $(this).next().stop(true, true).fadeIn(0).html('[input event fired!]: ' + $(this).val()).fadeOut(2000);
+});
+$('#scrumMaster').on('input', function() {
+    $(this).val() // get the current value of the input field.
+});
+$('#planText').on('input', function() {
+    $(this).val() // get the current value of the input field.
+});
+$('#risksText').on('input', function() {
+    $(this).val() // get the current value of the input field.
+});
+$('#modern').bind('input', function() {
+    $(this).next().stop(true, true).fadeIn(0).html('[input event fired!]: ' + $(this).val()).fadeOut(2000);
+});
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+            break;
+        }
+    }
+}

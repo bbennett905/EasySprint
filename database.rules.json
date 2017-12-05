@@ -33,7 +33,10 @@
         "title": {
           ".validate": "newData.isString()"
         },
-        "notes": {
+        "sprintOverview": {
+          ".validate": "newData.isString()"
+        },
+        "scrumMaster": {
           ".validate": "newData.isString()"
         },
         "schedule": {

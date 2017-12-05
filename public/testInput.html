@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {padding:0;margin:0;font-family:Arial,Helvetica,sans-serif;}
+        div {margin:15px;}
+        label {display:block;}
+        input {border:solid 1px #888;font-size:20px;border-radius:5px;padding:2px;outline:none;}
+        #modern {box-shadow:0 0 4px green;}
+        #kbInput {box-shadow:0 0 4px blue;}
+        #timer {box-shadow:0 0 4px red;}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="dynamicCreation.js"></script>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <!-- input event fires when the input value has changed, nice modern way to check for differences, limitations are that some browsers don't support this event (yet)) -->
+    <label for="modern">Input Event</label>
+    <input id="modern" />
+    <span></span>
+</div>
+
+</body>
+</html>

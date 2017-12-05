@@ -20,16 +20,103 @@
     <!--This is for bootstrap v3, which is stable but no new features, v4 is in beta-->
     <!--Dark theme-->
     <!--Look here for some examples of what things look like: https://bootswatch.com/3/darkly/ -->
+    <script src="app.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css">
     <script src="dynamicCreation.js"></script>
+    <!-- Add all necessary firebase modules -->
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
+    <!-- Firebase initialization -->
+    <script src="config.js"></script>
+    <!-- Firebase auth stuff -->
+    <script src="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
     <!--<script src="app.js"></script> -->
 </head>
 <body>
 <div id="myDIV">
 </div>
-<script type="text/javascript">
-    intro();
-</script>
+<div>
+    <h1>
+        <input title="docName" datatype="text" readonly="true" ondblclick="this.readOnly='';" id="docName" placeholder="insert Doc name here"/>
+        <script>
+            $('#docName').on('input', function() {
+                //TODO: add doc id
+                // var x  = $(this).val(); // get the current value of the input field.
+                $(this).next().stop(true, true).fadeIn(0).html('Updated to Database').fadeOut(2000);
+                firebase.database().ref('docs/' + /*doc id*/  + '/title').set($(this).val())
+            });
+
+        </script>
+    </h1>
+    <h3>Sprint Overview: </h3>
+    <label for="sprintText" title="sprintText" >
+        <textarea id="sprintText" datatype="text" rows="5" cols="100" readonly="true" ondblclick="this.readOnly='';" ></textarea>
+        <span></span>
+        <script>
+           $('#sprintText').on('input', function() {
+               //TODO: add doc id
+
+               // var x  = $(this).val(); // get the current value of the input field.
+               $(this).next().stop(true, true).fadeIn(0).html('Updated to Database').fadeOut(2000);
+               firebase.database().ref('docs/' + /*doc id*/  + '/title').set($(this).val())
+
+
+
+           });
+
+        </script>
+
+
+        </input>
+
+    </label>
+    <h3>Scrum Master: </h3>
+    <input title="scrumMaster" datatype="text" readonly="true" ondblclick="this.readOnly='';" id="scrumMaster">
+    <script>
+        $('#scrumMaster').on('input', function() {
+            //TODO: add doc id
+
+            // var x  = $(this).val(); // get the current value of the input field.
+            $(this).next().stop(true, true).fadeIn(0).html('Updated to Database').fadeOut(2000);
+            firebase.database().ref('docs/' + /*doc id*/  + '/scrumMaster').set($(this).val())
+
+        });
+
+    </script>
+
+
+    </input>
+    <h3>Weekly Meeting Plan:  </h3>
+    <textarea title="meetingPlan" datatype="text" rows="5" cols="100" readonly="true" ondblclick="this.readOnly='';" id="meetingPlan">
+    </textarea>
+    <script>
+        $('#meetingPlan').on('input', function() {
+            //TODO: add doc id
+
+            // var x  = $(this).val(); // get the current value of the input field.
+            $(this).next().stop(true, true).fadeIn(0).html('Updated to Database').fadeOut(2000);
+            firebase.database().ref('docs/' + /*doc id*/  + '/meeting').set($(this).val())
+
+        });
+
+    </script>
+    <h3>Risks and Challenges: </h3>
+    <textarea title="risksText" datatype="text" rows="5" cols="100" readonly="true" ondblclick="this.readOnly='';" id="risksText">
+
+    </textarea>
+    <script>
+        $('#risksText').on('input', function() {
+            //TODO: add doc id
+            // var x  = $(this).val(); // get the current value of the input field.
+            $(this).next().stop(true, true).fadeIn(0).html('Updated to Database').fadeOut(2000);
+            firebase.database().ref('docs/' + /*doc id*/  + '/risks').set($(this).val())
+
+        });
+    </script>
+</div>
 <!--container is a fixed width class, container-fluid scales to the width of the device-->
         <!--using js to make a good collapsable table: https://jsfiddle.net/dabros/vuLj1bcb/ -->
         <!-- another one: https://bootsnipp.com/snippets/featured/accordion-list-group-menu -->
