@@ -1,0 +1,26 @@
+
+@media(min-width:768px) {
+	.user-col {
+		max-width: 250px;
+	}
+}
+
+@media(max-width:768px) {
+	.user-col {
+		max-width: 768px;
+	}
+}
+
+.panel {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+#docslist-add {
+	float: right;
+}
+
+.doc-button {
+	width: 90%;
+}
+

@@ -101,31 +101,48 @@ var onUidDocsChanged = function (snapshot) {
 	e.type = "button";
 	e.classList.add("btn");
 	e.classList.add("btn-primary");
-	e.classList.add("btn-sm");
+	e.classList.add("btn-md");
 	e.value = "Create a new doc";
-	e.innerHTML = "<span class=\"glyphicon glyphicon-plus\"></span> Create Doc";
-	e.onClick = function() {
-		//TODO do something
+	e.innerHTML = "<span class=\"glyphicon glyphicon-plus\"></span>";
+	e.onclick = function() {
+		db.ref('newDocs/' + firebase.auth().currentUser.uid).set(true);
 	};
+
 	document.getElementById('docslist-add').appendChild(e);
-	
 
 	snapshot.forEach(function (snapshot) {
 		if (snapshot.val()) {
-			e = document.createElement("BUTTON");
-			e.type = "button";
-			e.classList.add("btn");
-			e.classList.add("btn-primary");
-			e.classList.add("btn-block");
-			e.value = snapshot.key; //TODO should be doc name
-			e.innerHTML = snapshot.key;
-			e.onClick = function() {
+			var div = document.createElement("div");
+			div.classList.add("btn-group");
+			div.classList.add("btn-block");
+
+			var button = document.createElement("BUTTON");
+			button.type = "button";
+			button.classList.add("btn");
+			button.classList.add("btn-primary");
+			button.classList.add("btn-block");
+			button.classList.add("doc-button");
+			button.onclick = function() {
 				//TODO do something
+				//Like, link to doc.html#docid
 			};
-			document.getElementById('docslist').appendChild(e);
-			document.getElementById('docslist').innerHTML += "<br>";
-			//innerHTML += snapshot.key + ", ";
+			var delDoc = document.createElement("button");
+			delDoc.type = "button";
+			delDoc.classList.add("btn");
+			delDoc.classList.add("btn-danger");
+			delDoc.innerHTML = "<span class=\"glyphicon glyphicon-remove\"></span>";
+			delDoc.onclick = function() {
+				db.ref('docs/' + snapshot.key).remove();
+			};
 			count++;
+
+			db.ref('docs/' + snapshot.key + "/title").once('value', function(innerSnap) {
+				button.value = innerSnap.val(); //TODO should be doc name
+				button.innerHTML = innerSnap.val();
+				div.appendChild(button);
+				div.appendChild(delDoc);
+				document.getElementById('docslist').appendChild(div);
+			});
 		}
 	});
 	
@@ -145,6 +162,9 @@ var handleSignedInUser = function(user) {
 	var uidRef = db.ref('users/' + firebase.auth().currentUser.uid);
 	uidRef.on('value', onUidDocsChanged);
 	document.getElementById('docslist').style.display = 'block';
+
+	document.getElementById('user-name').innerHTML = user.displayName;
+	document.getElementById('user-email').innerHTML = user.email;
 };
 
 /**

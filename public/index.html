@@ -20,6 +20,8 @@
     <!-- Firebase auth stuff -->
     <script src="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
+    
+    <link type="text/css" rel="stylesheet" href="style.css" />
   </head>
 
   <body>
@@ -41,24 +43,32 @@
       <!-- anything to display when logged in -->
       <div id="logged-in">
         <div class="row">
-          <div class="col-sm-8">
-            <div class="row panel panel-default">
-              <h3 class="col-xs-8" id="docslist-head">Loading your docs...</h3>
-              <h4 class="col-xs-4" id="docslist-add"></h4>
-            </div>
-            <p id="docslist">
-    
-            </p>
-          </div>
-          <div class="col-sm-4">
-            <h3>Logged in!</h3>
+          <div class="col-sm-4 user-col">
+            <h4>Logged in as <span id="user-name"></span></h4>
+            <h5 id="user-email"></h5>
             <p>
               <a href="testDocHtml.html"> Create New Document</a>
-              <button id="sign-out">Sign Out</button>
-              <button id="test-buttona">Test DB A - create</button>
-              <button id="test-buttonb">Test DB B - add user</button>
+              <div class="hidden-sm hidden-md hidden-lg hidden-xl btn-group">
+                  <button id="sign-out" type="button" class="btn btn-primary">Sign Out</button>
+                  <button id="test-buttona" type="button" class="btn btn-primary">Test DB A - create</button>
+                  <button id="test-buttonb" type="button" class="btn btn-primary">Test DB B - add user</button>
+              </div>
+              <div class="hidden-xs btn-group btn-group-vertical">
+                <button id="sign-out" type="button" class="btn btn-primary">Sign Out</button>
+                <button id="test-buttona" type="button" class="btn btn-primary">Test DB A - create</button>
+                <button id="test-buttonb" type="button" class="btn btn-primary">Test DB B - add user</button>
+              </div>
             </p>
           </div>
+          <div class="col-sm-8">
+              <div class="row panel panel-default">
+                <h3 class="col-xs-10" id="docslist-head">Loading your docs...</h3>
+                <h4 class="col-xs-2" id="docslist-add"></h4>
+                <p id="docslist">
+                  
+                </p>
+              </div>
+            </div>
         </div>
       </div>
       <div class="row clearfix">
