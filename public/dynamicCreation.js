@@ -25,19 +25,27 @@ function intro() {
     sprintText.setAttribute("type","text");
     sprintText.setAttribute("rows","5");
     sprintText.setAttribute("cols","100");
+    sprintText.setAttribute("readonly","true");
+    sprintText.setAttribute("ondblclick","this.readOnly='';");
 
     var scrumMaster = document.createElement("INPUT");
     scrumMaster.setAttribute("type","text");
+    scrumMaster.setAttribute("readonly","true");
+    scrumMaster.setAttribute("ondblclick","this.readOnly='';");
 
     var planText = document.createElement("TEXTAREA");
     planText.setAttribute("type","text");
     planText.setAttribute("rows","5");
     planText.setAttribute("cols","100");
+    planText.setAttribute("readonly","true");
+    planText.setAttribute("ondblclick","this.readOnly='';");
 
     var risksText = document.createElement("TEXTAREA");
     risksText.setAttribute("type","text");
     risksText.setAttribute("rows","5");
     risksText.setAttribute("cols","100");
+    risksText.setAttribute("readonly","true");
+    risksText.setAttribute("ondblclick","this.readOnly='';");
 
     var submit1 = document.createElement("INPUT");
     submit1.setAttribute("type","submit");
