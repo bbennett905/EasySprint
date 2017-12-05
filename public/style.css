@@ -24,3 +24,34 @@
 	width: 90%;
 }
 
+.user-input {
+	background: transparent;
+	border: none;
+	color: #ffffff;
+	resize: none;
+}
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+	color: #bbbbbb;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+	color: #bbbbbb;
+	opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+	color: #bbbbbb;
+	opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+	color: #bbbbbb;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+	color: #bbbbbb;
+}
+::placeholder { /* Most modern browsers support this now. */
+	color: #bbbbbb;
+}
+
+.user-input:focus {
+	background: rgba(255, 255, 255, 0.103);
+}
+

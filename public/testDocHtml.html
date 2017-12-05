@@ -34,13 +34,21 @@
     <script src="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
     <!--<script src="app.js"></script> -->
+    <link type="text/css" rel="stylesheet" href="style.css" />
 </head>
 <body>
 <div id="myDIV">
 </div>
 <div>
     <h1>
-        <input title="docName" datatype="text" readonly="true" ondblclick="this.readOnly='';" id="docName" placeholder="insert Doc name here"/>
+        <input class="user-input"
+            title="docName" 
+            datatype="text" 
+            readonly="true" 
+            ondblclick="this.readOnly='';" 
+            onblur="this.readOnly=true"
+            id="docName" 
+            placeholder="Unnamed Doc"/>
         <script>
             $('#docName').on('input', function() {
                 //TODO: add doc id
@@ -51,30 +59,35 @@
 
         </script>
     </h1>
-    <h3>Sprint Overview: </h3>
-    <label for="sprintText" title="sprintText" >
-        <textarea id="sprintText" datatype="text" rows="5" cols="100" readonly="true" ondblclick="this.readOnly='';" ></textarea>
-        <span></span>
-        <script>
-           $('#sprintText').on('input', function() {
-               //TODO: add doc id
+    <!-- the heading not being full width might get fixed when it goes in the other page -->
+    <div class="panel panel-default">
+        <div class="panel-heading">Sprint Overview: </div>
+        <div class="panel-body">
+            <textarea class="user-input" 
+                id="sprintText" 
+                datatype="text" 
+                rows="5" 
+                cols="100" 
+                readonly="true" 
+                onblur="this.readOnly=true"
+                ondblclick="this.readOnly='';" 
+                placeholder="What are you planning to accomplish?"></textarea>
+            <span></span>
+            <script>
+                $('#sprintText').on('input', function() {
+                    //TODO: add doc id
 
-               // var x  = $(this).val(); // get the current value of the input field.
-               $(this).next().stop(true, true).fadeIn(0).html('Updated to Database').fadeOut(2000);
-               firebase.database().ref('docs/' + /*doc id*/  + '/title').set($(this).val())
-
-
-
-           });
-
-        </script>
-
-
-        </input>
-
-    </label>
+                    // var x  = $(this).val(); // get the current value of the input field.
+                    $(this).next().stop(true, true).fadeIn(0).html('Updated to Database').fadeOut(2000);
+                    firebase.database().ref('docs/' + /*doc id*/  + '/title').set($(this).val());
+                });
+            </script>
+            </input>
+        </div>
+    </div>
     <h3>Scrum Master: </h3>
-    <input title="scrumMaster" datatype="text" readonly="true" ondblclick="this.readOnly='';" id="scrumMaster">
+    <!-- TODO This needs to be like a drop down list or radio buttons, to select who it is-->
+    <input class="user-input" title="scrumMaster" datatype="text" readonly="true" ondblclick="this.readOnly='';" id="scrumMaster">
     <script>
         $('#scrumMaster').on('input', function() {
             //TODO: add doc id
@@ -90,8 +103,16 @@
 
     </input>
     <h3>Weekly Meeting Plan:  </h3>
-    <textarea title="meetingPlan" datatype="text" rows="5" cols="100" readonly="true" ondblclick="this.readOnly='';" id="meetingPlan">
-    </textarea>
+    <textarea class="user-input" 
+        title="meetingPlan" 
+        datatype="text" 
+        rows="5" 
+        cols="100" 
+        readonly="true" 
+        onblur="this.readOnly=true"
+        ondblclick="this.readOnly='';" 
+        id="meetingPlan"
+        placeholder="When and where will meetings be held?"></textarea>
     <script>
         $('#meetingPlan').on('input', function() {
             //TODO: add doc id
@@ -104,9 +125,16 @@
 
     </script>
     <h3>Risks and Challenges: </h3>
-    <textarea title="risksText" datatype="text" rows="5" cols="100" readonly="true" ondblclick="this.readOnly='';" id="risksText">
-
-    </textarea>
+    <textarea class="user-input"
+        title="risksText" 
+        datatype="text" 
+        rows="5" 
+        cols="100" 
+        readonly="true" 
+        ondblclick="this.readOnly='';"
+        onblur="this.readOnly=true"
+        id="risksText"
+        placeholder="What difficulties will you face?"></textarea>
     <script>
         $('#risksText').on('input', function() {
             //TODO: add doc id
