@@ -203,20 +203,63 @@ window.addEventListener('load', function() {
 
 
 });
-function generateBacklogRow() {
-    //TODO figure out how to get the class name set
-    var backlogTable=document.getElementById("backlogTable");
-    var new_row = backlogTable.rows[3].cloneNode(true);
-    var len = backlogTable.rows.length;
+
+function generateTaskRow() {
+    //TODO insert stuff to add to database
+
+    var userStory=document.getElementById("userStory");
+    var new_row = userStory.rows[1].cloneNode(true);
+    var len = userStory.rows.length;
     new_row.cells[0].innerHTML = len;
     new_row.className ="danger";
     //new_row.classList ="danger";
     var inp1 = new_row.cells[1].getElementsByTagName("textarea")[0];
     inp1.id += len;
     inp1.value = '';
-    var inp2 = new_row.cells[3].getElementsByTagName("td")[0];
-    backlogTable.appendChild(new_row);
+    var inp2 = new_row.cells[2].getElementsByTagName("input")[0];
+    inp2.value = "";
+    //var inp2 = new_row.cells[3].getElementsByTagName("td")[0];
+    userStory.appendChild(new_row);
 
+}
+function deleteStoryFromUserStory(row)
+{
+    //TODO insert stuff to delete from database
+    var i=row.parentNode.parentNode.rowIndex;
+    if(i == 1){
+        alert("Can't have Zero Tasks in User Story");
+    } else {
+        document.getElementById("userStory").deleteRow(i);
+    }
+}
+function generateBacklogRow() {
+    //TODO figure out how to get the class name set
+    //TODO figure out how to generate a row on its own
+    //TODO insert stuff to add to database
+
+    //currently only works as long as the second element isn't deleted
+        var backlogTable=document.getElementById("backlogTable");
+        var new_row = backlogTable.rows[3].cloneNode(true);
+        var len = backlogTable.rows.length;
+        new_row.cells[0].innerHTML = len;
+        new_row.className ="danger";
+        //new_row.classList ="danger";
+            var inp1 = new_row.cells[1].getElementsByTagName("textarea")[0];
+        inp1.id += len;
+        inp1.value = '';
+        var inp2 = new_row.cells[3].getElementsByTagName("td")[0];
+        backlogTable.appendChild(new_row);
+    /*
+    var tableID = document.getElementById("backlogTable");
+    var table = document.getElementById(tableID);
+
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+
+    var cell3 = row.insertCell(0);
+    cell3.innerHTML = cell3.innerHTML +' <input type="text" size="20" name="values[]"/> <INPUT type="button"  class="btn_medium" value="Remove" onclick="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);" /><br><small><font color="gray">Enter Title</font></small>';
+
+*/
 
 }
 function generateBacklog() {
@@ -224,8 +267,14 @@ function generateBacklog() {
 }
 function deleteStoryFromBacklog(row)
 {
+    //TODO insert stuff to delete from database
+
     var i=row.parentNode.parentNode.rowIndex;
-    document.getElementById("backlogTable").deleteRow(i);
+    if(i == 1){
+        alert("Can't have Zero User Stories in Backlog");
+    } else {
+        document.getElementById("backlogTable").deleteRow(i);
+    }
 }
 
 //JQUERY attempt to try and get the text as soon as it is input
@@ -252,4 +301,50 @@ function sleep(milliseconds) {
             break;
         }
     }
+}
+function addTable() {
+    var myTableDiv = document.getElementById("metric_results");
+    var table = document.createElement('TABLE');
+    var tableBody = document.createElement('TBODY');
+    table.className ="table";
+
+    table.border = '1';
+    table.appendChild(tableBody);
+
+    var heading = new Array();
+    heading[0] = "Task #";
+    heading[1] = "Hours";
+    heading[2] = "Assigned to";
+    heading[3] = "Status";
+    heading[4] = "Options";
+
+    var stock = new Array()
+    stock[0] = new Array("Cars", "88.625", "85.50", "85.81", "987");
+    stock[1] = new Array("Veggies", "88.625", "85.50", "85.81", "988");
+    stock[2] = new Array("Colors", "88.625", "85.50", "85.81", "989");
+    stock[3] = new Array("Numbers", "88.625", "85.50", "85.81", "990");
+    stock[4] = new Array("Requests", "88.625", "85.50", "85.81", "991");
+
+    //TABLE COLUMNS
+    var tr = document.createElement('TR');
+    tableBody.appendChild(tr);
+    for (i = 0; i < heading.length; i++) {;
+        var th = document.createElement('TH')
+        th.width = '75';
+        th.appendChild(document.createTextNode(heading[i]));
+        tr.appendChild(th);
+    }
+
+    //TABLE ROWS
+    for (i = 0; i < stock.length; i++) {
+        var tr = document.createElement('TR');
+
+        for (j = 1; j < stock[i].length; j++) {
+            var td = document.createElement('TD')
+            td.appendChild(document.createTextNode(stock[i][j]));
+            tr.appendChild(td)
+        }
+        tableBody.appendChild(tr);
+    }
+    myTableDiv.appendChild(table)
 }
