@@ -89,7 +89,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				firebase.database().ref('docs/' + docid + '/people/' + count + '/phone').set("867-5309");
 			});
 		};
-		firebase.database().ref('docs/' + docid + '/people').on('value', peopleTable);
+		firebase.database().ref('docs/' + docid + '/people').once('value', buildPeopleTable);
+		
 	}
 });
 
@@ -144,9 +145,6 @@ function scrumMaster(snapshot) {
 		user.setAttribute("id", id);
 		user.setAttribute("name", "radio");
 
-		//document.getElementById("doc-intro-master").appendChild(user);
-		/*creating label for Text to Radio button*/
-		
 		var lblYes = document.createElement("LABEL");
 		lblYes.appendChild(user);
 		/*create text node for label Text which display for Radio button*/
@@ -159,15 +157,12 @@ function scrumMaster(snapshot) {
 		para.appendChild(spaceBr);
 	});
 	if (count == 0) {
-		para.innerHTML = "Add someone to set the scrum master";
+		para.innerHTML = "Add someone to set a scrum master!";
 	}
 	document.getElementById("doc-intro-master").appendChild(para);
 }
 
-function peopleTable(snapshot) {
-	//Each line needs: name(input), email(input), phone(input), delete(button)
-	//SO: have a row: 4 4 3 1
-	//on small screens: hide email+phone
+function buildPeopleTable(snapshot) {
 	var people = document.getElementById('peoplelist');
 	people.innerHTML = "";
 	var row = document.createElement("div");
@@ -183,9 +178,10 @@ function peopleTable(snapshot) {
 	delCol.classList += "col-xs-1";
 
 	snapshot.forEach(function(innerSnap) {
-		//TODO on changed listeners
 		var n = document.createElement("input");
+		n.id = "p-n-" + innerSnap.key;
 		n.classList.add("user-input");
+		n.classList.add("peoplelist-entry");
 		n.readOnly = true;
 		n.ondblclick = function() {
 			this.readOnly=false;
@@ -194,8 +190,13 @@ function peopleTable(snapshot) {
 			this.readOnly=true;
 		};
 		n.value = innerSnap.child('name').val();
+		n.oninput = function () {
+			firebase.database().ref('docs/' + docid + '/people/' + innerSnap.key + '/name').set(this.value);
+		};
 		var e = document.createElement("input");
+		e.id = "p-e-" + innerSnap.key;
 		e.classList.add("user-input");
+		e.classList.add("peoplelist-entry");
 		e.readOnly = true;
 		e.ondblclick = function() {
 			this.readOnly=false;
@@ -204,8 +205,13 @@ function peopleTable(snapshot) {
 			this.readOnly=true;
 		};
 		e.value = innerSnap.child('email').val();
+		e.oninput = function () {
+			firebase.database().ref('docs/' + docid + '/people/' + innerSnap.key + '/email').set(this.value);
+		};
 		var p = document.createElement("input");
+		p.id = "p-p-" + innerSnap.key;
 		p.classList.add("user-input");
+		p.classList.add("peoplelist-entry");
 		p.readOnly = true;
 		p.ondblclick = function() {
 			this.readOnly=false;
@@ -214,12 +220,15 @@ function peopleTable(snapshot) {
 			this.readOnly=true;
 		};
 		p.value = innerSnap.child('phone').val();
-		//TODO delete button
+		p.oninput = function () {
+			firebase.database().ref('docs/' + docid + '/people/' + innerSnap.key + '/phone').set(this.value);
+		};
 		var d = document.createElement("button");
 		d.type = "button";
 		d.classList.add("btn");
 		d.classList.add("btn-danger");
 		d.classList.add("btn-xs");
+		d.classList.add("peoplelist-entry");
 		d.innerHTML = "<span class=\"glyphicon glyphicon-remove\"></span>";
 		d.onclick = function() {
 			db.ref('docs/' + docid + '/people/' + innerSnap.key).remove();
@@ -235,4 +244,31 @@ function peopleTable(snapshot) {
 	row.appendChild(phoneCol);
 	row.appendChild(delCol);
 	people.appendChild(row);
+
+	firebase.database().ref('docs/' + docid + '/people').on('value', updatePeopleTable);
+}
+
+var lastSize = 0;
+
+function updatePeopleTable(snapshot) {
+	var count = 0;
+	snapshot.forEach(function(innerSnap) {
+		count++;
+	});
+	if (count != lastSize) {
+		//Need to rebuild table
+		lastSize = count;
+		buildPeopleTable(snapshot);
+	} else {
+		//Length is same, so no need to rebuild
+		lastSize = count;
+		snapshot.forEach(function(innerSnap) {
+			var n = document.getElementById("p-n-" + innerSnap.key);
+			n.value = innerSnap.child('name').val();
+			var e = document.getElementById("p-e-" + innerSnap.key);
+			e.value = innerSnap.child('email').val();
+			var p = document.getElementById("p-p-" + innerSnap.key);
+			p.value = innerSnap.child('phone').val();
+		});
+	}
 }
