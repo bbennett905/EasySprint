@@ -42,7 +42,7 @@
 <div>
     <h1>
         <input class="user-input"
-            title="docName" 
+            title="docName" align="center"
             datatype="text" 
             readonly="true" 
             ondblclick="this.readOnly='';" 
@@ -67,13 +67,13 @@
                 id="sprintText" 
                 datatype="text" 
                 rows="5" 
-                cols="100" 
+                cols="100"
                 readonly="true" 
                 onblur="this.readOnly=true"
                 ondblclick="this.readOnly='';" 
                 placeholder="What are you planning to accomplish?"></textarea>
             <span></span>
-            <script>
+            <script type="text/javascript">
                 $('#sprintText').on('input', function() {
                     //TODO: add doc id
 
@@ -82,12 +82,25 @@
                     firebase.database().ref('docs/' + /*doc id*/  + '/title').set($(this).val());
                 });
             </script>
-            </input>
         </div>
     </div>
     <h3>Scrum Master: </h3>
     <!-- TODO This needs to be like a drop down list or radio buttons, to select who it is-->
-    <input class="user-input" title="scrumMaster" datatype="text" readonly="true" ondblclick="this.readOnly='';" id="scrumMaster">
+    <div>
+        <form action="" id="scrumMaster">
+            <script type="text/javascript">
+                scrumMaster();
+                checkScrumMaster();
+
+            </script>
+        </form>
+
+
+    </div>
+
+    <!--
+    <input class="user-input" title="scrumMaster" datatype="text" readonly="true" ondblclick="this.readOnly='';" id="scrumMaster"
+    placeholder="">
     <script>
         $('#scrumMaster').on('input', function() {
             //TODO: add doc id
@@ -99,10 +112,12 @@
         });
 
     </script>
+    -->
 
+<div class="panel panel-default">
+    <div class="panel-heading">Weekly Meeting Plan:  </div>
 
-    </input>
-    <h3>Weekly Meeting Plan:  </h3>
+    <div class="panel-body">
     <textarea class="user-input" 
         title="meetingPlan" 
         datatype="text" 
@@ -113,6 +128,7 @@
         ondblclick="this.readOnly='';" 
         id="meetingPlan"
         placeholder="When and where will meetings be held?"></textarea>
+        <span></span>
     <script>
         $('#meetingPlan').on('input', function() {
             //TODO: add doc id
@@ -124,7 +140,11 @@
         });
 
     </script>
-    <h3>Risks and Challenges: </h3>
+    </div>
+</div>
+    <div class="panel panel-default">
+    <div class="panel-heading">Risks and Challenges: </div>
+        <div class="panel-body">
     <textarea class="user-input"
         title="risksText" 
         datatype="text" 
@@ -135,6 +155,7 @@
         onblur="this.readOnly=true"
         id="risksText"
         placeholder="What difficulties will you face?"></textarea>
+        <span></span>
     <script>
         $('#risksText').on('input', function() {
             //TODO: add doc id
@@ -144,6 +165,8 @@
 
         });
     </script>
+    </div>
+    </div>
 </div>
 <!--container is a fixed width class, container-fluid scales to the width of the device-->
         <!--using js to make a good collapsable table: https://jsfiddle.net/dabros/vuLj1bcb/ -->

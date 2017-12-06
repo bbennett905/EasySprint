@@ -101,6 +101,54 @@ function intro() {
 
 
 }
+function scrumMaster() {
+    var docid = parseInt(window.location.hash.substring(1));
+    var users =[];
+    firebase.database.ref('docs/' + docid + '/people').once('value', function(snapshot) {
+        snapshot.forEach(function(innerSnap) {
+            //I think innerSnap.key is the index/id
+            users.push(innerSnap.child('name').val());
+            //should be the name, same for email and phone
+        });
+    });
+    //test array
+    //var users =["Carl Weathers","Apollo Creed", "Rocky" ,"Ivan Drago"];
+    for(var i = 0; i < users.length ; i++) {
+        //create input element for radio button
+        var user = document.createElement("INPUT");
+        user.setAttribute("type", "radio");
+
+        user.setAttribute("id", users[i]);
+        user.setAttribute("name", "master");
+
+        document.getElementById("scrumMaster").appendChild(user);
+        /*creating label for Text to Radio button*/
+        var lblYes = document.createElement("LABEL");
+        /*create text node for label Text which display for Radio button*/
+        var textYes = document.createTextNode(users[i]);
+        lblYes.appendChild(textYes);
+        document.getElementById("scrumMaster").appendChild(lblYes);
+        //create new span for each user
+        var space = document.createElement("span");
+        space.setAttribute("innerHTML", "&nbsp;&nbsp");
+        //make a space for each new radio button
+        document.getElementById("scrumMaster").appendChild(space);
+        var spaceBr= document.createElement("br");
+        document.getElementById("scrumMaster").appendChild(spaceBr);
+
+    }
+}
+function checkScrumMaster() {
+    var users =["Carl Weathers","Apollo Creed", "Rocky" ,"Ivan Drago"];
+    var scrumMaster ="none Selected";
+    for (var i = 0; i < users.length; i++) {
+        if (document.getElementById(users[i]).checked) {
+            scrumMaster = users[i];
+        }
+    }
+
+
+}
 
 window.addEventListener('load', function() {
     document.getElementById('sign-out').addEventListener('click', function() {
