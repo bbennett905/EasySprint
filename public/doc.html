@@ -22,6 +22,7 @@
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
     
     <link type="text/css" rel="stylesheet" href="style.css" />
+    <script src="doc.js"></script>
   </head>
 
   <body>
@@ -62,24 +63,80 @@
           </div>
           <div class="col-sm-8">
             <div id="doc-body">
-              <h3>Doc title goes here</h3>
+              <h3>
+                <input class="user-input"
+                  title="docName" 
+                  datatype="text" 
+                  readonly="true" 
+                  ondblclick="this.readOnly='';" 
+                  onblur="this.readOnly=true"
+                  id="doc-title" 
+                  placeholder="Unnamed Doc" />
+              </h3>
               <div id="sprint-progress" class="progress">
                 <div class="progress-bar progress-bar-success" role="progressbar" style="width:40%"></div>
                 <div class="progress-bar progress-bar-warning" role="progressbar" style="width:10%"></div>
                 <div class="progress-bar progress-bar-danger" role="progressbar" style="width:20%"></div>
               </div>
-              <!-- <ul class="nav nav-tabs nav-justified">
-                <li class="active"><a data-toggle="tab" href="#general">General</a></li>
-                <li><a data-toggle="tab" href="#userstories">User Stories</a></li>
-                <li><a data-toggle="tab" href="#report">Report</a></li>
-                <li><a data-toggle="tab" href="#backlog">Backlog</a></li>
-              </ul> -->
               <div class="tab-content">
                 <div id="general" class="tab-pane fade in active">
                   <h3>General</h3>
                   <p>
-                    Intro, overview, people, etc goes here
+                    TODO: People
                   </p>
+                  <div class="row">
+                    <div class="col-sm-8">
+                      <div class="panel panel-default">
+                          <div class="panel-heading">Weekly Meeting Plan</div>
+                          <div class="panel-body">
+                            <textarea class="user-input" 
+                              id="doc-intro-meeting"
+                              style="height:50px;"
+                              datatype="text" 
+                              readonly="true" 
+                              onblur="this.readOnly=true"
+                              ondblclick="this.readOnly='';" 
+                              placeholder="When and where will meetings be held?"></textarea>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">Scrum Master</div>
+                        <div class="panel-body">
+                          <form id="doc-intro-master">
+                            <p>
+                              Add someone to set a scrum master!
+                            </p>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Sprint Overview</div>
+                    <div class="panel-body">
+                      <textarea class="user-input" 
+                        id="doc-intro-overview"
+                        datatype="text" 
+                        readonly="true" 
+                        onblur="this.readOnly=true"
+                        ondblclick="this.readOnly='';" 
+                        placeholder="What are you planning to accomplish?"></textarea>
+                    </div>
+                  </div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Risks and Challenges</div>
+                    <div class="panel-body">
+                      <textarea class="user-input" 
+                        id="doc-intro-risks"
+                        datatype="text" 
+                        readonly="true" 
+                        onblur="this.readOnly=true"
+                        ondblclick="this.readOnly='';" 
+                        placeholder="What difficulties will you face?"></textarea>
+                    </div>
+                  </div>
                 </div>
                 <div id="userstories" class="tab-pane fade">
                   <h3>User Stories</h3>
@@ -110,6 +167,5 @@
         </div>
       </div>
     </div>
-    <script src="doc.js"></script>
   </body>
 </html>

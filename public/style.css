@@ -11,9 +11,14 @@
 	}
 }
 
-.panel {
+.docspanel {
 	padding-left: 20px;
 	padding-right: 20px;
+}
+
+textarea {
+	width: 100%;
+	height: 100px;
 }
 
 #docslist-add {
@@ -53,5 +58,6 @@
 
 .user-input:focus {
 	background: rgba(255, 255, 255, 0.103);
+	resize: vertical;
 }
 

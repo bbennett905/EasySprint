@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (isNaN(docid)) {
 		docid = -1;
 	}
-	console.log(docid);
 	if (docid > -1) {
 		document.getElementById('doc-body').style.display = 'block';
 		document.getElementById('doc-tabs').style.display = 'block';
@@ -23,6 +22,62 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById('nodoc').style.display = 'block';
 		document.getElementById('doc-body').style.display = 'none';
 		document.getElementById('doc-tabs').style.display = 'none';
+	}
+
+	if (docid > -1) {
+		db.ref('docs/' + docid + '/title').on('value', function(snapshot) {
+			document.getElementById('doc-title').value = snapshot.val();
+		});
+		document.getElementById('doc-title').oninput = function() {
+			//TODO some kind of last-edited indictator
+			firebase.database().ref('docs/' + docid + '/title').set(this.value)
+		};
+		db.ref('docs/' + docid + '/sprintOverview').on('value', function(snapshot) {
+			document.getElementById('doc-intro-overview').value = snapshot.val();
+		});
+		document.getElementById('doc-intro-overview').oninput = function() {
+			//TODO some kind of last-edited indictator
+			firebase.database().ref('docs/' + docid + '/sprintOverview').set(this.value)
+		};
+		db.ref('docs/' + docid + '/risks').on('value', function(snapshot) {
+			document.getElementById('doc-intro-risks').value = snapshot.val();
+		});
+		document.getElementById('doc-intro-risks').oninput = function() {
+			//TODO some kind of last-edited indictator
+			firebase.database().ref('docs/' + docid + '/risks').set(this.value)
+		};
+		db.ref('docs/' + docid + '/schedule').on('value', function(snapshot) {
+			document.getElementById('doc-intro-meeting').value = snapshot.val();
+		});
+		document.getElementById('doc-intro-meeting').oninput = function() {
+			//TODO some kind of last-edited indictator
+			firebase.database().ref('docs/' + docid + '/schedule').set(this.value)
+		};
+		firebase.database().ref('docs/' + docid + '/people').on('value', scrumMaster);
+		document.getElementById('doc-intro-master').onchange = function() {
+			for (var i = 0; i < this.length; i++) {
+				if (this[i].checked) {
+					console.log(this[i]);
+					console.log(this[i].id);
+					var id = parseInt(this[i].id);
+					if (!isNaN(id)) {
+						firebase.database().ref('docs/' + docid + '/master').set(id);
+					}
+					break;
+				}
+			}
+		};
+		firebase.database().ref('docs/' + docid + '/master').on('value', function(snapshot) {
+			var id = snapshot.val();
+			var form = document.getElementById('doc-intro-master');
+			for (var i = 0; i < form.length; i++) {
+				if (parseInt(form[i].id) == id) {
+					form[i].checked = true;
+				} else {
+					form[i].checked = false;
+				}
+			}
+		});
 	}
 });
 
@@ -61,3 +116,37 @@ var handleSignedOutUser = function() {
 firebase.auth().onAuthStateChanged(function(user) {
 	user ? handleSignedInUser(user) : handleSignedOutUser();
 });
+var para = document.createElement("p");
+function scrumMaster(snapshot) {
+	var count = 0;
+	document.getElementById("doc-intro-master").innerHTML = "";
+	snapshot.forEach(function(innerSnap) {
+		count++;
+		var name = innerSnap.child('name').val();
+		var id = innerSnap.key;
+
+		var user = document.createElement("INPUT");
+		user.setAttribute("type", "radio");
+
+		user.setAttribute("id", id);
+		user.setAttribute("name", "radio");
+
+		//document.getElementById("doc-intro-master").appendChild(user);
+		/*creating label for Text to Radio button*/
+		
+		var lblYes = document.createElement("LABEL");
+		lblYes.appendChild(user);
+		/*create text node for label Text which display for Radio button*/
+		var textYes = document.createTextNode(" " + name);
+		lblYes.appendChild(textYes);
+		para.appendChild(lblYes);
+		document.getElementById("doc-intro-master").appendChild(para);
+
+		var spaceBr= document.createElement("br");
+		para.appendChild(spaceBr);
+	});
+	if (count == 0) {
+		para.innerHTML = "Add someone to set the scrum master";
+	}
+	document.getElementById("doc-intro-master").appendChild(para);
+}

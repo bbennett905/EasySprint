@@ -44,7 +44,6 @@ var onUidDocsChanged = function (snapshot) {
 	if (isWaiting) {
 		return;
 	}
-	console.log("onuiddocschanged");
 	document.getElementById('docslist').innerHTML = "";
 	document.getElementById('docslist-add').innerHTML = "";
 	document.getElementById('docslist-head').innerHTML = "Your docs:";
@@ -64,7 +63,6 @@ var onUidDocsChanged = function (snapshot) {
 	document.getElementById('docslist-add').appendChild(e);
 
 	snapshot.forEach(function (snapshot) {
-		console.log("foreach")
 		if (snapshot.val()) {
 			var div = document.createElement("div");
 			div.classList.add("btn-group");
@@ -92,7 +90,6 @@ var onUidDocsChanged = function (snapshot) {
 			isWaiting = true;
 			db.ref('docs/' + snapshot.key + "/title").once('value', function(innerSnap) {
 				isWaiting = false;
-				console.log("got title");
 				button.value = innerSnap.val();
 				button.innerHTML = innerSnap.val();
 				div.appendChild(button);
@@ -124,7 +121,6 @@ var handleSignedInUser = function(user) {
 	document.getElementById('user-name').innerHTML = user.displayName;
 	document.getElementById('user-email').innerHTML = user.email;
 	$('#sign-out').on('click', function() {
-		console.log("sign out");
 		firebase.auth().signOut();
 	});
 };

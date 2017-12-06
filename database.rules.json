@@ -62,7 +62,8 @@
           }
         },
         "master": {
-          ".validate": "newData.isNumber() && root.child('docs/' + $docid + '/people').hasChild(newData.val())"
+          //TODO fix this rule
+          ".validate": "newData.isNumber()"// && root.child('docs/' + $docid + '/people').hasChild(newData.val())"
         },
         "userStories": {
           "$index": {
