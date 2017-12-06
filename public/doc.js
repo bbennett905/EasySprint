@@ -3,11 +3,26 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
 var db = firebase.database();
 
+var docid = -1;
 document.addEventListener('DOMContentLoaded', function() {
 	// // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 	// // The Firebase SDK is initialized and available here!
 	if (!isLoggedIn) {
 		document.getElementById('logged-in').style.display = 'none';
+	}
+	docid = parseInt(window.location.hash.substring(1));
+	if (isNaN(docid)) {
+		docid = -1;
+	}
+	console.log(docid);
+	if (docid > -1) {
+		document.getElementById('doc-body').style.display = 'block';
+		document.getElementById('doc-tabs').style.display = 'block';
+		document.getElementById('nodoc').style.display = 'none';
+	} else {
+		document.getElementById('nodoc').style.display = 'block';
+		document.getElementById('doc-body').style.display = 'none';
+		document.getElementById('doc-tabs').style.display = 'none';
 	}
 });
 

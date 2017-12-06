@@ -77,8 +77,7 @@ var onUidDocsChanged = function (snapshot) {
 			button.classList.add("btn-block");
 			button.classList.add("doc-button");
 			button.onclick = function() {
-				//TODO do something
-				//Like, link to doc.html#docid
+				location.href = "doc.html#" + snapshot.key;
 			};
 			var delDoc = document.createElement("button");
 			delDoc.type = "button";
