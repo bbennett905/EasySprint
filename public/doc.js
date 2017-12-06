@@ -185,7 +185,7 @@ function buildPeopleTable(snapshot) {
 	row.classList += "row";
 
 	var nameCol = document.createElement("div");
-	nameCol.classList += "col-xs-4";
+	nameCol.classList += "col-sm-4 col-xs-11";
 	var emailCol = document.createElement("div");
 	emailCol.classList += "col-sm-4 hidden-xs";
 	var phoneCol = document.createElement("div");
@@ -196,21 +196,13 @@ function buildPeopleTable(snapshot) {
 	var count = 0;
 	snapshot.forEach(function(innerSnap) {
 		count++;
+
 		var n = document.createElement("input");
 		n.id = "p-n-" + innerSnap.key;
 		n.classList.add("user-input");
 		n.classList.add("peoplelist-entry");
 		n.readOnly = true;
-		n.ondblclick = function() {
-			this.readOnly=false;
-		};
-		n.onblur = function() {
-			this.readOnly=true;
-		};
-		n.value = innerSnap.child('name').val();
-		n.oninput = function () {
-			firebase.database().ref('docs/' + docid + '/people/' + innerSnap.key + '/name').set(this.value);
-		};
+		
 		var e = document.createElement("input");
 		e.id = "p-e-" + innerSnap.key;
 		e.classList.add("user-input");
@@ -251,10 +243,19 @@ function buildPeopleTable(snapshot) {
 		d.onclick = function() {
 			db.ref('docs/' + docid + '/people/' + innerSnap.key).remove();
 		};
-		nameCol.appendChild(n);
-		emailCol.appendChild(e);
-		phoneCol.appendChild(p);
-		delCol.appendChild(d);
+		var ndiv = document.createElement("div");
+		var ediv = document.createElement("div");
+		var pdiv = document.createElement("div");
+		var ddiv = document.createElement("div");
+		ndiv.appendChild(n);
+		ediv.appendChild(e);
+		pdiv.appendChild(p);
+		ddiv.appendChild(d);
+
+		nameCol.appendChild(ndiv);
+		emailCol.appendChild(ediv);
+		phoneCol.appendChild(pdiv);
+		delCol.appendChild(ddiv);
 	});
 
 	row.appendChild(nameCol);
@@ -320,6 +321,18 @@ function buildUserStoriesTable(snapshot) {
 		titleInput.oninput = function () {
 			firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/title').set(this.value);
 		};
+		var delButton = document.createElement("button");
+		delButton.type = "button";
+		delButton.style = "float: right;";
+		delButton.classList.add("btn");
+		delButton.classList.add("btn-danger");
+		delButton.classList.add("btn-xs");
+		delButton.classList.add("peoplelist-entry");
+		delButton.innerHTML = "<span class=\"glyphicon glyphicon-remove\"></span>";
+		delButton.onclick = function() {
+			db.ref('docs/' + docid + '/userStories/' + innerSnap.key).remove();
+		};
+		title.appendChild(delButton);
 		title.appendChild(titleInput);
 		div.appendChild(title);
 
@@ -333,6 +346,7 @@ function buildUserStoriesTable(snapshot) {
 		notesBody.classList.add("panel-body");
 		var notesInput = document.createElement('textarea');
 		notesInput.classList.add("user-input");
+		notesInput.style = "height:50px;";
 		notesInput.id = "us-notes-" + innerSnap.key;
 		notesInput.placeholder = "Any notes, links, references can be saved here";
 		notesInput.datatype = "text";
@@ -351,6 +365,170 @@ function buildUserStoriesTable(snapshot) {
 		notesPanel.appendChild(notesHead);
 		notesPanel.appendChild(notesBody);
 		div.appendChild(notesPanel);
+
+		//Each task has: title, (notes), estimated, actual, assign, progress, delete
+		//			5			1		1	2	2		1
+		//Then add task button
+		var tasksPanel = document.createElement("div");
+		tasksPanel.classList.add("panel");
+		tasksPanel.classList.add("panel-default");
+		var tasksHead = document.createElement("div");
+		tasksHead.classList.add("panel-heading");
+		var tasksHeadRow = document.createElement("div");
+		tasksHeadRow.classList.add("row");
+		var tasksHeadTitle = document.createElement("div");
+		tasksHeadTitle.classList += "col-md-5 col-xs-9";
+		tasksHeadTitle.innerHTML = "Tasks";
+		var tasksHeadEst = document.createElement("div");
+		tasksHeadEst.classList.add("col-xs-2");
+		tasksHeadEst.innerHTML = "Estimated Time";
+		var tasksHeadAct = document.createElement("div");
+		tasksHeadAct.classList.add("col-sm-1");
+		tasksHeadAct.classList.add("hidden-xs");
+		tasksHeadAct.classList.add("hidden-sm");
+		tasksHeadAct.innerHTML = "Actual Time";
+		var tasksHeadAssign = document.createElement("div");
+		tasksHeadAssign.classList.add("col-sm-2");
+		tasksHeadAssign.classList.add("hidden-xs");
+		tasksHeadAssign.classList.add("hidden-sm");
+		tasksHeadAssign.innerHTML = "Assigned To";
+		var tasksHeadProgress = document.createElement("div");
+		tasksHeadProgress.classList.add("col-sm-1");
+		tasksHeadProgress.classList.add("hidden-xs");
+		tasksHeadProgress.classList.add("hidden-sm");
+		tasksHeadProgress.innerHTML = "Status";
+		var tasksHeadDel = document.createElement("div");
+		tasksHeadDel.classList.add("col-xs-1");
+		tasksHeadDel.innerHTML = "Del";
+		tasksHeadRow.appendChild(tasksHeadTitle);
+		tasksHeadRow.appendChild(tasksHeadEst);
+		tasksHeadRow.appendChild(tasksHeadAct);
+		tasksHeadRow.appendChild(tasksHeadAssign);
+		tasksHeadRow.appendChild(tasksHeadProgress);
+		tasksHeadRow.appendChild(tasksHeadDel);
+		tasksHead.appendChild(tasksHeadRow);
+		tasksPanel.appendChild(tasksHead);
+		var tasksBody = document.createElement("div");
+		tasksBody.classList.add("panel-body");
+		
+		innerSnap.child('tasks').forEach(function(snap) {
+			var row = document.createElement("div");
+			row.classList += "row";
+
+			var taskTitle = document.createElement("div");
+			taskTitle.classList += "col-md-5 col-xs-9";
+			var titleInput = document.createElement("input");
+			titleInput.id = "us-task-title-" + innerSnap.key + "-" + snap.key;
+			titleInput.classList += "user-input";
+			titleInput.readOnly = true;
+			titleInput.ondblclick = function() {
+				this.readOnly=false;
+			};
+			titleInput.onblur = function() {
+				this.readOnly=true;
+			};
+			titleInput.value = snap.child('title').val();
+			titleInput.oninput = function () {
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/title').set(this.value);
+			};
+			titleInput.placeholder = "Task";
+			titleInput.style = "width:100%;";
+			taskTitle.appendChild(titleInput);
+			var taskEst = document.createElement("div");
+			taskEst.classList += "col-xs-2";
+			var estInput = document.createElement("input");
+			estInput.id = "us-task-est-" + innerSnap.key + "-" + snap.key;
+			estInput.classList += "user-input";
+			estInput.readOnly = true;
+			estInput.ondblclick = function() {
+				this.readOnly=false;
+			};
+			estInput.onblur = function() {
+				this.readOnly=true;
+			};
+			estInput.value = snap.child('estimatedTime').val();
+			estInput.oninput = function () {
+				var val = parseInt(this.value);
+				if (isNaN(val)) {
+					return;
+				}
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/estimatedTime').set(val);
+			};
+			estInput.placeholder = "#";
+			estInput.style = "width:100%;";
+			taskEst.appendChild(estInput);
+			var taskAct = document.createElement("div");
+			taskAct.classList += "col-sm-1 hidden-xs hidden-sm";
+			var actInput = document.createElement("input");
+			actInput.id = "us-task-act-" + innerSnap.key + "-" + snap.key;
+			actInput.classList += "user-input";
+			actInput.readOnly = true;
+			actInput.ondblclick = function() {
+				this.readOnly=false;
+			};
+			actInput.onblur = function() {
+				this.readOnly=true;
+			};
+			actInput.value = snap.child('actualTime').val();
+			actInput.oninput = function () {
+				var val = parseInt(this.value);
+				if (isNaN(val)) {
+					return;
+				}
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/actualTime').set(val);
+			};
+			actInput.placeholder = "#";
+			actInput.style = "width:100%;";
+			taskAct.appendChild(actInput);
+			var taskAssign = document.createElement("div");
+			taskAssign.classList += "col-sm-2 hidden-xs hidden-sm";
+			// TODO dropdown, with built
+			var taskProgress = document.createElement("div");
+			taskProgress.classList += "col-sm-1 hidden-xs hidden-sm";
+			// TODO
+			var taskDel = document.createElement("div");
+			taskDel.classList += "col-xs-1";
+			var taskDelBtn = document.createElement("button");
+			taskDelBtn.type = "button";
+			taskDelBtn.classList.add("btn");
+			taskDelBtn.classList.add("btn-danger");
+			taskDelBtn.classList.add("btn-xs");
+			taskDelBtn.classList.add("peoplelist-entry");
+			taskDelBtn.innerHTML = "<span class=\"glyphicon glyphicon-remove\"></span>";
+			taskDelBtn.onclick = function() {
+				db.ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key).remove();
+			};
+			taskDel.appendChild(taskDelBtn);
+
+			row.appendChild(taskTitle);
+			row.appendChild(taskEst);
+			row.appendChild(taskAct);
+			row.appendChild(taskAssign);
+			row.appendChild(taskProgress);
+			row.appendChild(taskDel);
+			tasksBody.appendChild(row);
+		});
+
+		tasksPanel.appendChild(tasksBody);
+		var addBtn = document.createElement("button");
+		addBtn.type = "button";
+		addBtn.classList += "btn btn-success btn-block btn-sm";
+		addBtn.innerHTML = "<span class=\"glyphicon glyphicon-plus\"></span> Add a Task";
+		addBtn.onclick = function() {
+			var max = 0;
+			firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks').once('value', function(s) {
+				s.forEach(function(snap) {
+					if (parseInt(snap.key) > max) {
+						max = parseInt(snap.key);
+					}
+				});
+				max++;
+				//max is the new id to use
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + max + '/title').set("Task Title");
+			});
+		}
+		tasksPanel.appendChild(addBtn);
+		div.appendChild(tasksPanel);
 		list.appendChild(div);
 	});
 	
@@ -369,6 +547,15 @@ function updateUserStoriesTable(snapshot) {
 			title.value = innerSnap.child('title').val();
 			var title = document.getElementById("us-notes-" + innerSnap.key);
 			title.value = innerSnap.child('notes').val();
+			innerSnap.child('tasks').forEach(function(snap) {
+				var title = document.getElementById("us-task-title-" + innerSnap.key + "-" + snap.key);
+				title.value = snap.child('title').val();
+				var est = document.getElementById("us-task-est-" + innerSnap.key + "-" + snap.key);
+				est.value = snap.child('estimatedTime').val();
+				var act = document.getElementById("us-task-act-" + innerSnap.key + "-" + snap.key);
+				act.value = snap.child('actualTime').val();
+				// TODO assign, status
+			});
 		});
 	}
 }
