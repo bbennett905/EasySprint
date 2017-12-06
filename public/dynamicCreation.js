@@ -102,6 +102,7 @@ function intro() {
 
 }
 function scrumMaster() {
+    /*
     var docid = parseInt(window.location.hash.substring(1));
     var users =[];
     firebase.database.ref('docs/' + docid + '/people').once('value', function(snapshot) {
@@ -111,16 +112,15 @@ function scrumMaster() {
             //should be the name, same for email and phone
         });
     });
+    */
     //test array
-    //var users =["Carl Weathers","Apollo Creed", "Rocky" ,"Ivan Drago"];
+    var users =["Carl Weathers","Apollo Creed", "Rocky" ,"Ivan Drago"];
     for(var i = 0; i < users.length ; i++) {
         //create input element for radio button
         var user = document.createElement("INPUT");
         user.setAttribute("type", "radio");
-
         user.setAttribute("id", users[i]);
         user.setAttribute("name", "master");
-
         document.getElementById("scrumMaster").appendChild(user);
         /*creating label for Text to Radio button*/
         var lblYes = document.createElement("LABEL");
@@ -203,6 +203,30 @@ window.addEventListener('load', function() {
 
 
 });
+function generateBacklogRow() {
+    //TODO figure out how to get the class name set
+    var backlogTable=document.getElementById("backlogTable");
+    var new_row = backlogTable.rows[3].cloneNode(true);
+    var len = backlogTable.rows.length;
+    new_row.cells[0].innerHTML = len;
+    new_row.className ="danger";
+    //new_row.classList ="danger";
+    var inp1 = new_row.cells[1].getElementsByTagName("textarea")[0];
+    inp1.id += len;
+    inp1.value = '';
+    var inp2 = new_row.cells[3].getElementsByTagName("td")[0];
+    backlogTable.appendChild(new_row);
+
+
+}
+function generateBacklog() {
+
+}
+function deleteStoryFromBacklog(row)
+{
+    var i=row.parentNode.parentNode.rowIndex;
+    document.getElementById("backlogTable").deleteRow(i);
+}
 
 //JQUERY attempt to try and get the text as soon as it is input
 $('#sprintText').bind('input', function() {
