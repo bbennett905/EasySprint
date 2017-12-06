@@ -177,7 +177,9 @@ function buildPeopleTable(snapshot) {
 	var delCol = document.createElement("div");
 	delCol.classList += "col-xs-1";
 
+	var count = 0;
 	snapshot.forEach(function(innerSnap) {
+		count++;
 		var n = document.createElement("input");
 		n.id = "p-n-" + innerSnap.key;
 		n.classList.add("user-input");
@@ -244,6 +246,9 @@ function buildPeopleTable(snapshot) {
 	row.appendChild(phoneCol);
 	row.appendChild(delCol);
 	people.appendChild(row);
+	if (count == 0) {
+		people.innerHTML = "No one's on this team, add someone!";
+	}
 
 	firebase.database().ref('docs/' + docid + '/people').on('value', updatePeopleTable);
 }
