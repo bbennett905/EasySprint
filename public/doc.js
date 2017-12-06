@@ -57,8 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById('doc-intro-master').onchange = function() {
 			for (var i = 0; i < this.length; i++) {
 				if (this[i].checked) {
-					console.log(this[i]);
-					console.log(this[i].id);
 					var id = parseInt(this[i].id);
 					if (!isNaN(id)) {
 						firebase.database().ref('docs/' + docid + '/master').set(id);
@@ -78,6 +76,20 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 		});
+		document.getElementById('people-add-btn').onclick = function() {
+			console.log("button");
+			var count = 0;
+			firebase.database().ref('docs/' + docid + '/people').once('value', function(snapshot) {
+				snapshot.forEach(function(innerSnap) {
+					count++;
+				});
+				//count is the new id to use
+				firebase.database().ref('docs/' + docid + '/people/' + count + '/name').set("Name");
+				firebase.database().ref('docs/' + docid + '/people/' + count + '/email').set("test@example.com");
+				firebase.database().ref('docs/' + docid + '/people/' + count + '/phone').set("867-5309");
+			});
+		};
+		firebase.database().ref('docs/' + docid + '/people').on('value', peopleTable);
 	}
 });
 
@@ -116,10 +128,11 @@ var handleSignedOutUser = function() {
 firebase.auth().onAuthStateChanged(function(user) {
 	user ? handleSignedInUser(user) : handleSignedOutUser();
 });
-var para = document.createElement("p");
+
 function scrumMaster(snapshot) {
 	var count = 0;
 	document.getElementById("doc-intro-master").innerHTML = "";
+	var para = document.createElement("p");
 	snapshot.forEach(function(innerSnap) {
 		count++;
 		var name = innerSnap.child('name').val();
@@ -149,4 +162,77 @@ function scrumMaster(snapshot) {
 		para.innerHTML = "Add someone to set the scrum master";
 	}
 	document.getElementById("doc-intro-master").appendChild(para);
+}
+
+function peopleTable(snapshot) {
+	//Each line needs: name(input), email(input), phone(input), delete(button)
+	//SO: have a row: 4 4 3 1
+	//on small screens: hide email+phone
+	var people = document.getElementById('peoplelist');
+	people.innerHTML = "";
+	var row = document.createElement("div");
+	row.classList += "row";
+
+	var nameCol = document.createElement("div");
+	nameCol.classList += "col-xs-4";
+	var emailCol = document.createElement("div");
+	emailCol.classList += "col-sm-4 hidden-xs";
+	var phoneCol = document.createElement("div");
+	phoneCol.classList += "col-sm-3 hidden-xs";
+	var delCol = document.createElement("div");
+	delCol.classList += "col-xs-1";
+
+	snapshot.forEach(function(innerSnap) {
+		//TODO on changed listeners
+		var n = document.createElement("input");
+		n.classList.add("user-input");
+		n.readOnly = true;
+		n.ondblclick = function() {
+			this.readOnly=false;
+		};
+		n.onblur = function() {
+			this.readOnly=true;
+		};
+		n.value = innerSnap.child('name').val();
+		var e = document.createElement("input");
+		e.classList.add("user-input");
+		e.readOnly = true;
+		e.ondblclick = function() {
+			this.readOnly=false;
+		};
+		e.onblur = function() {
+			this.readOnly=true;
+		};
+		e.value = innerSnap.child('email').val();
+		var p = document.createElement("input");
+		p.classList.add("user-input");
+		p.readOnly = true;
+		p.ondblclick = function() {
+			this.readOnly=false;
+		};
+		p.onblur = function() {
+			this.readOnly=true;
+		};
+		p.value = innerSnap.child('phone').val();
+		//TODO delete button
+		var d = document.createElement("button");
+		d.type = "button";
+		d.classList.add("btn");
+		d.classList.add("btn-danger");
+		d.classList.add("btn-xs");
+		d.innerHTML = "<span class=\"glyphicon glyphicon-remove\"></span>";
+		d.onclick = function() {
+			db.ref('docs/' + docid + '/people/' + innerSnap.key).remove();
+		};
+		nameCol.appendChild(n);
+		emailCol.appendChild(e);
+		phoneCol.appendChild(p);
+		delCol.appendChild(d);
+	});
+
+	row.appendChild(nameCol);
+	row.appendChild(emailCol);
+	row.appendChild(phoneCol);
+	row.appendChild(delCol);
+	people.appendChild(row);
 }
