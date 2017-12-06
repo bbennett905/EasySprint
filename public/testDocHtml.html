@@ -209,6 +209,7 @@
             </tbody>
 
         </table>
+<!--
     <div class="row clearfix">
         <div class="col-md-12 column">
             <table class="table table-bordered table-hover" id="people-table">
@@ -250,9 +251,77 @@
         <a id="add_row" class="btn btn-default pull-left">Add Row</a>
         <a id='delete_row' class="pull-right btn btn-default">Delete Row</a>
     </div>
+    -->
 
+<div id="backlog" class="container">
+    <table class="table" id="backlogTable">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>User Story</th>
+            <th>Options</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody id="mainBacklog">
+        <tr class="success">
+            <td>1</td>
+            <td><textarea class="user-input"
+                          title="risksText"
+                          datatype="text"
+                          rows="3"
+                          cols="100"
+                          readonly="true"
+                          ondblclick="this.readOnly='';"
+                          onblur="this.readOnly=true"
+                          id="story1"
+                          placeholder="Enter user story here"></textarea></td>
+            <td><button class="btn btn-primary btn-block btn-sm">Add to Doc</button>
+            <button class="btn btn-primary btn-block btn-sm"
+                    onclick="deleteStoryFromBacklog(this)">Remove from backlog</button>
+            </td>
+            <td>Completed</td>
 
+        </tr>
+        <!-- need to set class to success when added to doc -->
+        <tr class="active">
+            <td>2</td>
+            <td><textarea class="user-input"
+                          title="risksText"
+                          datatype="text"
+                          rows="3"
+                          cols="100"
+                          readonly="true"
+                          ondblclick="this.readOnly='';"
+                          onblur="this.readOnly=true"
+                          id="story2"
+                          placeholder="Enter user story here"></textarea></td>
+            <td><button class="btn btn-primary btn-block btn-sm">Add to Doc</button>
+                <button class="btn btn-primary btn-block btn-sm" onclick="deleteStoryFromBacklog(this)">Remove from backlog</button></td>
+            <td>In Progress</td>
 
+        </tr>
+        <tr class="danger">
+            <td>3</td>
+            <td><textarea class="user-input"
+                          title="risksText"
+                          datatype="text"
+                          rows="3"
+                          cols="100"
+                          readonly="true"
+                          ondblclick="this.readOnly='';"
+                          onblur="this.readOnly=true"
+                          id="story3"
+                          placeholder="Enter user story here"></textarea></td>
+            <td><button class="btn btn-primary btn-block btn-sm">Add to Doc</button>
+                <button class="btn btn-primary btn-block btn-sm"
+                        onclick="deleteStoryFromBacklog(this)">Remove from backlog</button></td>
+            <td>Needs Completion</td>
+        </tr>
+        </tbody>
+    </table>
+    <button onclick="generateBacklogRow()" class="btn btn-primary btn-block btn-sm">Add user story to Backlog</button>
 
+</div>
 </body>
 </html>
