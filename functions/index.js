@@ -38,7 +38,7 @@ exports.onNewDoc = functions.database.ref('/newDocs/{uid}').onCreate(event => {
 		}).then(function(s) {
 			return Promise.all([
 				admin.database().ref('docs/' + newId + '/users/' + uid).set(true),
-				admin.database().ref('docs/' + newId + '/title').set("New Doc"),
+				admin.database().ref('docs/' + newId + '/title').set("Untitled Doc"),
 				admin.database().ref('users/' + uid + '/' + newId).set(true),
 				admin.database().ref('newDocs/' + uid).remove()	
 			]);

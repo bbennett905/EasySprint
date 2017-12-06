@@ -1,14 +1,15 @@
 {
   "rules": {
     //If the user isn't authenticated, don't let them do anything
-    ".read": "auth != null",
-    ".write": "auth != null",
+    //".read": "auth != null",
+    //".write": "auth != null",
 
     //Doesn't really need any rules actually - but when a user wants to
     //  create a new doc they write their uid as a key here, functions
     //  handles the rest
     "newDocs": {
-
+      ".read": "auth != null",
+      ".write": "auth != null"
     },
     "users": {
       "$uid": {
@@ -34,9 +35,6 @@
           ".validate": "newData.isString()"
         },
         "sprintOverview": {
-          ".validate": "newData.isString()"
-        },
-        "scrumMaster": {
           ".validate": "newData.isString()"
         },
         "schedule": {
@@ -103,7 +101,17 @@
               }
             }
           }
-        }        
+        },
+        "backlog": {
+          "$index": {
+            "title": {
+              ".validate": "newData.isString()"
+            },
+            "progress": {
+              ".validate": "newData.isString() && (newData.val() == 'inprogress' || newData.val() == 'completed' || newData.val() == 'notstarted' || newData.val() == 'failed')"              
+            }
+          }
+        }    
       }
     }
   }
