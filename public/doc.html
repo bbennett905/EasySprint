@@ -45,6 +45,24 @@
         <!--Intro Sprint document stuff(SP -->
         <div class="row">
           <div class="col-sm-4 user-col">
+            <p>
+              <div id="doc-tabs">
+                <ul class="nav nav-pills nav-stacked">
+                  <li class="active"><a data-toggle="pill" href="#general">General</a></li>
+                  <li><a data-toggle="pill" href="#userstories">User Stories</a></li>
+                  <li><a data-toggle="pill" href="#report">Report</a></li>
+                  <li><a data-toggle="pill" href="#backlog">Backlog</a></li>
+                </ul>
+              </div>
+            </p>
+            <p>
+              <button type="button" 
+                class="btn btn-success btn-block btn-sm"
+                data-toggle="modal"
+                data-target="#add-email-modal">
+                <span class="glyphicon glyphicon-share"></span> Share
+              </button>
+            </p>
             <h4>Logged in as <span id="user-name"></span></h4>
             <h5 id="user-email"></h5>
             <p>
@@ -52,14 +70,6 @@
                   <span class="glyphicon glyphicon-log-out"></span> Sign Out
               </button>
             </p>
-            <div id="doc-tabs">
-              <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a data-toggle="pill" href="#general">General</a></li>
-                <li><a data-toggle="pill" href="#userstories">User Stories</a></li>
-                <li><a data-toggle="pill" href="#report">Report</a></li>
-                <li><a data-toggle="pill" href="#backlog">Backlog</a></li>
-              </ul>
-            </div>
           </div>
           <div class="col-sm-8">
             <div id="doc-body">
@@ -180,6 +190,35 @@
               <h3>Error: no document selected!</h3>
               <h3><small><a href="index.html">Please go back to our main page and select a document</a></small></h3>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="add-email-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Add a user by email</h4>
+          </div>
+          <div class="modal-body">
+            <p>
+              Please enter the Google email of the user you'd like to share this doc with.
+            </p>
+            <div class="form-group">
+              <label  class="col-sm-2 control-label"
+                for="email-input">Email</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control" 
+                  id="email-input" placeholder="Email"/>
+              </div>
+              <div class="col-sm-offset-2 col-sm-10">
+                  <button id="email-btn" type="button" class="btn btn-default">Submit</button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            
           </div>
         </div>
       </div>
