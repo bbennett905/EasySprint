@@ -500,7 +500,53 @@ function buildUserStoriesTable(snapshot) {
 			taskAct.appendChild(actInput);
 			//generate aasigned dropdown button
 			var taskAssign = document.createElement("div");
-			taskAssign.classList += "col-sm-2 hidden-xs hidden-sm";
+			taskAssign.classList += "col-sm-2 hidden-xs hidden-sm dropdown";
+			var taskAssignButton = document.createElement("button");
+			taskAssignButton.classList +=  "btn-xs btn-info bg-info dropdown-toggle";
+			taskAssignButton.type += "button";
+			taskAssignButton.setAttribute("data-toggle", "dropdown");
+			taskAssignButton.innerHTML ="Assign to : <span></span>";
+			var taskAssignDropdown = document.createElement("ul");
+			taskAssignDropdown.classList += "dropdown-menu";
+			//generate names of users within dropdown
+
+			var count =0;
+            snapshot.forEach(function(otherSnap) {
+                count++;
+                var name = otherSnap.child('name').val();
+                var id = otherSnap.key;
+                var user = document.createElement("li");
+                var aUser = document.createElement("a");
+                aUser.innerHTML = name;
+                aUser.onclick = function (ev) {
+                	taskAssignButton.innerHTML = name;
+				};
+                user.setAttribute("id", id);
+                user.appendChild(aUser);
+                taskAssignDropdown.appendChild(user);
+            });
+            /*
+            var user = document.createElement("li");
+            var aUser = document.createElement("a");
+            aUser.innerHTML = "Kevin";
+            aUser.onclick = function (ev) {
+                taskAssignButton.innerHTML = "Kevin";
+            };
+            user.setAttribute("id", "Kevin");
+            user.appendChild(aUser);
+            taskAssignDropdown.appendChild(user);
+			*/
+
+
+
+
+
+
+			taskAssign.appendChild(taskAssignButton);
+			taskAssign.appendChild(taskAssignDropdown);
+
+
+			// TODO dropdown, with built
 
 			//Generate Status Dropdown
 			var taskProgress = document.createElement("div");
