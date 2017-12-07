@@ -861,7 +861,8 @@ function isUserStorySnapshotChanged(snapshot) {
 }
 
 function generatePeopleReportTable(actHoursById, completedHoursById, incompleteHoursById, failedHoursByIds) {
-	var reportDiv = document.getElementById("report");
+	var reportDiv = document.getElementById("progress-chart");
+	reportDiv.innerHTML = "";
     var peoplePanel = document.createElement("div");
     peoplePanel.classList.add("panel");
     peoplePanel.classList.add("panel-default");
@@ -1018,13 +1019,13 @@ function generateReport() {
 		var notCompletedTasks = tasksInProgress + tasksNeedHelp + tasksNotStarted;
 		var failedTasks = tasksFailed;
 
-		//TODO call functions to draw progressbars and such, using above data
+		//	Table breakdown of people
+		generatePeopleReportTable(actHoursById, estHoursCompletedById, estHoursIncompleteById, estHoursFailedById);
 		//	Progressbar for time
 		generateTimeProgressbar(completedTime, notCompletedTime, failedTime);
 		//	Progressbar for tasks
 		generateTasksProgressbar(completedTasks, notCompletedTasks, failedTasks);
-		//	Table breakdown of people
-		generatePeopleReportTable(actHoursById, estHoursCompletedById, estHoursIncompleteById, estHoursFailedById);
+		
 	});
 }
 
