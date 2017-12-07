@@ -48,9 +48,11 @@
             <p>
               <div id="doc-tabs">
                 <ul class="nav nav-pills nav-stacked">
-                  <li class="active"><a data-toggle="pill" href="#general">General</a></li>
+                    <li><a data-toggle="pill" onclick="backToIndex()">Home</a></li>
+                    <li class="active"><a data-toggle="pill" href="#general">General</a></li>
                   <li><a data-toggle="pill" href="#userstories">User Stories</a></li>
                   <li><a data-toggle="pill" href="#report">Report</a></li>
+
                 </ul>
               </div>
             </p>
@@ -79,8 +81,9 @@
                   readonly="true" 
                   ondblclick="this.readOnly='';" 
                   onblur="this.readOnly=true"
-                  id="doc-title" 
-                  placeholder="Unnamed Doc" />
+                  id="doc-title"
+                  placeholder="Unnamed Doc"
+                  style="width: 500px;"/>
               </h3>
               <div class="tab-content">
                 <div id="general" class="tab-pane fade in active">
