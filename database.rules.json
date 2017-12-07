@@ -95,7 +95,7 @@
                 },
                 "progress": {
                   //Check that not only is it a string, but its one of these possibilities
-                  ".validate": "newData.isString() && (newData.val() == 'inprogress' || newData.val() == 'completed' || newData.val() == 'notstarted' || newData.val() == 'failed')"
+                  ".validate": "newData.isString() && (newData.val() == 'inprogress' || newData.val() == 'complete' || newData.val() == 'notstarted' || newData.val() == 'failed' || newData.val() == 'needhelp')"
                 }
               }
             },

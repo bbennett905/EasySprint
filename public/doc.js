@@ -501,21 +501,34 @@ function buildUserStoriesTable(snapshot) {
 			//generate aasigned dropdown button
 			var taskAssign = document.createElement("div");
 			taskAssign.classList += "col-sm-2 hidden-xs hidden-sm";
-			// TODO dropdown, with built
-
-
-
 
 			//Generate Status Dropdown
 			var taskProgress = document.createElement("div");
 			taskProgress.classList += "col-sm-1 hidden-xs hidden-sm dropdown";
 			var taskProgressButton = document.createElement("button");
+			taskProgressButton.id = "us-task-progress-" + innerSnap.key + "-" + snap.key;
 			taskProgressButton.classList += "btn-xs btn-info bg-info dropdown-toggle";
 			taskProgressButton.type += "button";
 			taskProgressButton.setAttribute("data-toggle","dropdown");
 			taskProgressButton.innerHTML = "Status <span></span>";
 			var taskProgressDropdown = document.createElement("ul");
 			taskProgressDropdown.classList += "dropdown-menu";
+			if (snap.child('progress').val() == 'complete') {
+				taskProgressButton.classList = "btn-xs btn-success bg-active dropdown-toggle";
+				taskProgressButton.innerHTML = "Completed <span class= \"caret></span>";
+			} else if (snap.child('progress').val() == 'inprogress') {
+				taskProgressButton.classList = "btn-xs btn-info bg-active dropdown-toggle";
+				taskProgressButton.innerHTML = "In Progress <span class= \"caret></span>";
+			} else if (snap.child('progress').val() == 'notstarted') {
+				taskProgressButton.classList = "btn-xs btn-primary bg-active dropdown-toggle";
+				taskProgressButton.innerHTML = "Not Started <span class= \"caret></span>";
+			} else if (snap.child('progress').val() == 'failed') {
+				taskProgressButton.classList = "btn-xs btn-danger bg-active dropdown-toggle";
+				taskProgressButton.innerHTML = "Failed <span class= \"caret></span>";
+			} else if (snap.child('progress').val() == 'needhelp') {
+				taskProgressButton.classList = "btn-xs btn-warning bg-active dropdown-toggle";
+				taskProgressButton.innerHTML = "Need Help <span class= \"caret></span>";
+			}
 
 			//Generate elements within dropdown
 			//complete element of dropdown
@@ -524,9 +537,7 @@ function buildUserStoriesTable(snapshot) {
 			var aComplete = document.createElement("a");
 			aComplete.innerHTML = "Complete";
 			aComplete.onclick =function (ev) {
-                taskProgressButton.classList = "btn-xs btn-active bg-success dropdown-toggle";
-                taskProgressButton.innerHTML = "Complete <span class= \"caret></span>";
-
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/progress').set("complete");
             };
 			complete.appendChild(aComplete);
 
@@ -536,9 +547,7 @@ function buildUserStoriesTable(snapshot) {
 			var aInProgress = document.createElement("a");
 			aInProgress.innerHTML ="In Progress";
 			aInProgress.onclick =function (ev) {
-				taskProgressButton.classList = "btn-xs btn-info bg-info dropdown-toggle";
-                taskProgressButton.innerHTML = "In Progress <span class= \"caret></span>";
-
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/progress').set("inprogress");
             };
 			inProgress.appendChild(aInProgress);
 
@@ -548,9 +557,7 @@ function buildUserStoriesTable(snapshot) {
 			var aHelpNeeded = document.createElement("a");
 			aHelpNeeded.innerHTML = "Help Needed";
             aHelpNeeded.onclick =function (ev) {
-                taskProgressButton.classList = "btn-xs btn-warning bg-active dropdown-toggle";
-                taskProgressButton.innerHTML = "Help Needed <span class= \"caret></span>";
-
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/progress').set("needhelp");
             };
             helpNeeded.appendChild(aHelpNeeded);
 			//not started element of dropdown
@@ -559,9 +566,7 @@ function buildUserStoriesTable(snapshot) {
             var aNotStarted = document.createElement("a");
             aNotStarted.innerHTML = "Not Started";
             aNotStarted.onclick =function (ev) {
-                taskProgressButton.classList = "btn-xs btn-primary bg-active dropdown-toggle";
-                taskProgressButton.innerHTML = "Not Started <span class= \"caret></span>";
-
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/progress').set("notstarted");
             };
             notStarted.appendChild(aNotStarted);
 			//failed element of dropdown
@@ -570,8 +575,8 @@ function buildUserStoriesTable(snapshot) {
             var aFailed = document.createElement("a");
             aFailed.innerHTML = "Failed";
             aFailed.onclick =function (ev) {
-                taskProgressButton.classList = "btn-xs btn-danger bg-active dropdown-toggle";
-                taskProgressButton.innerHTML = "Failed <span class= \"caret></span>";
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/progress').set("failed");
+                
             };
             failed.appendChild(aFailed);
 
@@ -583,7 +588,9 @@ function buildUserStoriesTable(snapshot) {
 
             taskProgress.appendChild(taskProgressButton);
             taskProgress.appendChild(taskProgressDropdown);
-			// TODO
+
+			//TODO assign dropdown
+
 			var taskDel = document.createElement("div");
 			taskDel.classList += "col-xs-1";
 			var taskDelBtn = document.createElement("button");
@@ -652,7 +659,24 @@ function updateUserStoriesTable(snapshot) {
 				est.value = snap.child('estimatedTime').val();
 				var act = document.getElementById("us-task-act-" + innerSnap.key + "-" + snap.key);
 				act.value = snap.child('actualTime').val();
-				// TODO assign, status
+				// TODO assign
+				var status = document.getElementById("us-task-progress-" + innerSnap.key + "-" + snap.key);
+				if (snap.child('progress').val() == 'complete') {
+					status.classList = "btn-xs btn-success bg-active dropdown-toggle";
+                	status.innerHTML = "Completed <span class= \"caret></span>";
+				} else if (snap.child('progress').val() == 'inprogress') {
+					status.classList = "btn-xs btn-info bg-active dropdown-toggle";
+                	status.innerHTML = "In Progress <span class= \"caret></span>";
+				} else if (snap.child('progress').val() == 'notstarted') {
+					status.classList = "btn-xs btn-primary bg-active dropdown-toggle";
+                	status.innerHTML = "Not Started <span class= \"caret></span>";
+				} else if (snap.child('progress').val() == 'failed') {
+					status.classList = "btn-xs btn-danger bg-active dropdown-toggle";
+                	status.innerHTML = "Failed <span class= \"caret></span>";
+				} else if (snap.child('progress').val() == 'needhelp') {
+					status.classList = "btn-xs btn-warning bg-active dropdown-toggle";
+                	status.innerHTML = "Need Help <span class= \"caret></span>";
+				}
 			});
 		});
 	}
