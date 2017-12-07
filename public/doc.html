@@ -82,11 +82,6 @@
                   id="doc-title" 
                   placeholder="Unnamed Doc" />
               </h3>
-              <div id="sprint-progress" class="progress">
-                <div class="progress-bar progress-bar-success" role="progressbar" style="width:40%"></div>
-                <div class="progress-bar progress-bar-warning" role="progressbar" style="width:10%"></div>
-                <div class="progress-bar progress-bar-danger" role="progressbar" style="width:20%"></div>
-              </div>
               <div class="tab-content">
                 <div id="general" class="tab-pane fade in active">
                   <h3>General</h3>
@@ -169,10 +164,14 @@
                 </div>
                 <div id="report" class="tab-pane fade">
                   <h3>Report</h3>
-                  <p>
-                    Analysis of data goes here. est hours breakdown by person, act hours breakdown,
-                    est vs actual, any kinds of graphs or charts that may be helpful
-                  </p>
+                  <h4>Completion Progress by Hours  <small id="progress-hours-title"></small></h4>
+                  <div id="progress-hours">
+
+                  </div>
+                  <h4>Completion Progress by Tasks  <small id="progress-tasks-title"></small></h4>
+                  <div id="progress-tasks">
+
+                  </div>
                 </div>
 
               </div>

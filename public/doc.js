@@ -334,6 +334,7 @@ function buildUserStoriesTable(snapshot) {
 		var titleInput = document.createElement("input");
 		titleInput.id = "us-title-" + innerSnap.key;
 		titleInput.classList.add("user-input");
+		titleInput.style.width = "85%";
 		titleInput.ondblclick = function() {
 			this.readOnly = false;
 		};
@@ -860,7 +861,7 @@ function isUserStorySnapshotChanged(snapshot) {
 }
 
 function generateReport() {
-	firebase.database.ref('docs/' + docid + '/userStories').on('value', function(snapshot) {
+	firebase.database().ref('docs/' + docid + '/userStories').on('value', function(snapshot) {
 		//Index is person ID, val is # hours
 		var estHoursById = [];
 		var estHoursCompleted = 0;
@@ -907,12 +908,61 @@ function generateReport() {
 		var notCompletedTime = estHoursInProgress + estHoursNeedHelp + estHoursNotStarted;
 		var failedTime = estHoursFailed;
 		var completedTasks = tasksCompleted;
-		var notCompletedTasks = tasksInProgress + tasksNeedHelp + taskssNotStarted;
+		var notCompletedTasks = tasksInProgress + tasksNeedHelp + tasksNotStarted;
 		var failedTasks = tasksFailed;
 
 		//TODO call functions to draw progressbars and such, using above data
 		//	Progressbar for time
+		generateTimeProgressbar(completedTime, notCompletedTime, failedTime);
 		//	Progressbar for tasks
+		generateTasksProgressbar(completedTasks, notCompletedTasks, failedTasks);
 		//	Table breakdown of people
 	});
+}
+
+function generateTimeProgressbar(completed, notcompleted, failed) {
+	var total = completed + notcompleted + failed;
+	var progress = document.createElement('div');
+	progress.style.height = "40px";
+	progress.classList += "progress";
+	var progressCompleted = document.createElement('div');
+	progressCompleted.classList += "progress-bar progress-bar-success";
+	progressCompleted.style.width = ((completed / total) * 100) + "%";
+	progressCompleted.innerHTML = "<h5>Completed</h5>";
+	progress.appendChild(progressCompleted);
+	if (failed > 0) {
+		var progressFailed = document.createElement('div');
+		progressFailed.classList += "progress-bar progress-bar-danger";
+		progressFailed.style.width = ((failed / total) * 100) + "%";
+		progressFailed.innerHTML = "<h5>Failed</h5>";
+		progress.appendChild(progressFailed);
+	}
+	document.getElementById('progress-hours-title').innerHTML = "";
+	document.getElementById('progress-hours-title').innerHTML = completed + "hr completed | " + failed + "hr failed | " + notcompleted + "hr not completed";
+	document.getElementById('progress-hours').innerHTML = "";
+	document.getElementById('progress-hours').appendChild(progress);
+}
+
+
+function generateTasksProgressbar(completed, notcompleted, failed) {
+	var total = completed + notcompleted + failed;
+	var progress = document.createElement('div');
+	progress.style.height = "40px";
+	progress.classList += "progress";
+	var progressCompleted = document.createElement('div');
+	progressCompleted.classList += "progress-bar progress-bar-success";
+	progressCompleted.style.width = ((completed / total) * 100) + "%";
+	progressCompleted.innerHTML = "<h5>Completed</h5>";
+	progress.appendChild(progressCompleted);
+	if (failed > 0) {
+		var progressFailed = document.createElement('div');
+		progressFailed.classList += "progress-bar progress-bar-danger";
+		progressFailed.style.width = ((failed / total) * 100) + "%";
+		progressFailed.innerHTML = "<h5>Failed</h5>";
+		progress.appendChild(progressFailed);
+	}
+	document.getElementById('progress-tasks-title').innerHTML = "";
+	document.getElementById('progress-tasks-title').innerHTML = completed + " tasks completed | " + failed + " tasks failed | " + notcompleted + " tasks not completed";
+	document.getElementById('progress-tasks').innerHTML = "";
+	document.getElementById('progress-tasks').appendChild(progress);
 }
