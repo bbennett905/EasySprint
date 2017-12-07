@@ -736,7 +736,7 @@ function buildUserStoriesTable(snapshot) {
 			criteriaPanel.appendChild(criteriaBody);
 			div.appendChild(criteriaPanel);
 		});
-		
+
         var addCriteria = document.createElement("button");
         addCriteria.type = "button";
         addCriteria.classList += "btn btn-success btn-block btn-sm";
@@ -754,7 +754,7 @@ function buildUserStoriesTable(snapshot) {
 				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/acceptanceCriteria/' + max).set("Empty acceptance criteria");
 			});
         };
-        
+
         div.appendChild(addCriteria);
 
         list.appendChild(div);
@@ -858,6 +858,88 @@ function isUserStorySnapshotChanged(snapshot) {
 	lastUserStoriesSize = count;
 	lastCriteriaSize = criteriaCountList;
 	return isDifferent;
+}
+function generatePeopleReportTable() {
+	var reportDiv = document.getElementById("report");
+    var peoplePanel = document.createElement("div");
+    peoplePanel.classList.add("panel");
+    peoplePanel.classList.add("panel-default");
+    var peopleHead = document.createElement("div");
+    peopleHead.classList.add("panel-heading");
+    var peopleHeadRow = document.createElement("div");
+    peopleHeadRow.classList.add("row");
+    var peopleHeadTitle = document.createElement("div");
+    peopleHeadTitle.classList.add("col-sm-4");
+    peopleHeadTitle.innerHTML = "People";
+    var peopleHeadComplete = document.createElement("div");
+    peopleHeadComplete.classList.add("col-sm-2");
+    peopleHeadComplete.innerHTML = "Completed Hours";
+    var peopleHeadAct = document.createElement("div");
+    peopleHeadAct.classList.add("col");
+    peopleHeadAct.classList.add("hidden-xs");
+    peopleHeadAct.classList.add("hidden-sm");
+    peopleHeadAct.innerHTML = "Actual Time";
+    var peopleHeadIncomplete = document.createElement("div");
+    peopleHeadIncomplete.classList.add("col-sm-2");
+	peopleHeadIncomplete.innerHTML ="Incomplete Hours";
+    var peopleHeadFailed = document.createElement("div");
+    peopleHeadFailed.classList.add("col-sm-2");
+    peopleHeadFailed.innerHTML="Failed  Hours";
+
+    peopleHeadRow.appendChild(peopleHeadTitle);
+    peopleHeadRow.appendChild(peopleHeadComplete);
+    peopleHeadRow.appendChild(peopleHeadIncomplete);
+    peopleHeadRow.appendChild(peopleHeadFailed);
+    peopleHeadRow.appendChild(peopleHeadAct);
+    peoplePanel.appendChild(peopleHeadRow);
+    //var tasksBody = document.createElement("div");
+    //tasksBody.classList.add("panel-body");
+    var peopleBody = document.createElement("div");
+    peopleBody.classList.add("panel-body");
+    var peopleRow = document.createElement("div");
+    peopleRow.classList.add("row");
+    var personName = document.createElement("div");
+    personName.classList.add("col-sm-4");
+    personName.classList.add("bg-primary");
+    //insert name here
+    personName.innerHTML ="Kevin";
+    var personComplete = document.createElement("div");
+    personComplete.classList.add("col-sm-2");
+    personComplete.classList.add("bg-success");
+
+    //insert complete hours here
+    personComplete.classList.add("text-center");
+    personComplete.innerHTML = "30";
+    var personAct = document.createElement("div");
+    personAct.classList.add("col");
+    personAct.classList.add("bg-info");
+    personAct.classList.add("text-center");
+    //peopleHeadAct.classList.add("hidden-xs");
+    //peopleHeadAct.classList.add("hidden-sm");
+    //insert actual hours here
+    personAct.innerHTML = "7";
+    var personIncomplete = document.createElement("div");
+    personIncomplete.classList.add("col-sm-2");
+    personIncomplete.classList.add("bg-warning");
+    personIncomplete.classList.add("text-center");
+    //insert incomplete hours here
+    personIncomplete.innerHTML ="14";
+    var personFailed = document.createElement("div");
+    personFailed.classList.add("col-sm-2");
+    personFailed.classList.add("bg-danger");
+    personFailed.classList.add("text-center");
+    //insert failed hours here
+    personFailed.innerHTML="3";
+    peopleRow.appendChild(personName);
+    peopleRow.appendChild(personComplete);
+    peopleRow.appendChild(personIncomplete);
+    peopleRow.appendChild(personFailed);
+    peopleRow.appendChild(personAct);
+    peopleBody.appendChild(peopleRow);
+
+
+    peoplePanel.appendChild(peopleBody);
+    reportDiv.appendChild(peoplePanel);
 }
 
 function generateReport() {
