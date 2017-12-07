@@ -31,6 +31,9 @@
         ".write": "root.child('users/' + auth.uid + '/' + $docid).exists() && root.child('users/' + auth.uid + '/' + $docid).val() == true",
         ".read": "root.child('users/' + auth.uid + '/' + $docid).exists() && root.child('users/' + auth.uid + '/' + $docid).val() == true",
 
+        "emailadd": {
+         // ".validate": "newData.isString()"
+        },
         "title": {
           ".validate": "newData.isString()"
         },

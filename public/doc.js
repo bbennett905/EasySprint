@@ -29,6 +29,21 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	if (docid > -1) {
+		document.getElementById('email-btn').onclick = function() {
+			var max = 0;
+			firebase.database().ref('docs/' + docid + '/emailadd').once('value', function(snapshot) {
+				snapshot.forEach(function(snap) {
+					if (parseInt(snap.key) > max) {
+						max = parseInt(snap.key);
+					}
+				});
+				max++;
+				firebase.database().ref('docs/' + docid + '/emailadd/' + max)
+					.set(document.getElementById('email-input').value);
+				document.getElementById('email-input').value = "";
+				$('#add-email-modal').modal('hide');
+			});
+		};
 		db.ref('docs/' + docid + '/title').on('value', function(snapshot) {
 			document.getElementById('doc-title').value = snapshot.val();
 		});

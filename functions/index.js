@@ -55,3 +55,21 @@ exports.onAddUser = functions.database.ref('/docs/{docid}/users/{uid}').onWrite(
 
 	return admin.database().ref('users/' + uid + '/' + event.params.docid).set(val);
 });
+
+exports.onShare = functions.database.ref('docs/{docid}/emailadd/{index}').onWrite(event => {
+	const docid = event.params.docid;
+	const index = event.params.index;
+	const email = event.data.val();
+
+	return admin.auth().getUserByEmail(email)
+		.then(function(userRecord) {
+			const uid = userRecord.uid;
+			return Promise.all([
+				admin.database().ref('docs/' + docid + '/users/' + uid).set(true),
+				admin.database().ref('docs/' + docid + '/emailadd/' + index).remove()
+			]);
+		});	
+		/*.catch(function(error) {
+			//probably an invalid email
+		});*/
+});
