@@ -491,16 +491,14 @@ function buildUserStoriesTable(snapshot) {
 
 
 
-
-
 			//Generate Status Dropdown
 			var taskProgress = document.createElement("div");
 			taskProgress.classList += "col-sm-1 hidden-xs hidden-sm dropdown";
 			var taskProgressButton = document.createElement("button");
-			taskProgressButton.classList += "btn-xs btn-active bg-active dropdown-toggle";
+			taskProgressButton.classList += "btn-xs btn-info bg-info dropdown-toggle";
 			taskProgressButton.type += "button";
 			taskProgressButton.setAttribute("data-toggle","dropdown");
-			taskProgressButton.innerHTML = "Status <span class= \"caret></span>";
+			taskProgressButton.innerHTML = "Status <span></span>";
 			var taskProgressDropdown = document.createElement("ul");
 			taskProgressDropdown.classList += "dropdown-menu";
 
@@ -519,11 +517,11 @@ function buildUserStoriesTable(snapshot) {
 
 			//inProgress element of dropdown
 			var inProgress = document.createElement("li");
-			inProgress.classList += "bg-active";
+			inProgress.classList += "bg-info";
 			var aInProgress = document.createElement("a");
 			aInProgress.innerHTML ="In Progress";
 			aInProgress.onclick =function (ev) {
-				taskProgressButton.classList = "btn-xs btn-active bg-active dropdown-toggle";
+				taskProgressButton.classList = "btn-xs btn-info bg-info dropdown-toggle";
                 taskProgressButton.innerHTML = "In Progress <span class= \"caret></span>";
 
             };
