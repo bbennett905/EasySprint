@@ -1074,3 +1074,8 @@ function generateTasksProgressbar(completed, notcompleted, failed) {
 	document.getElementById('progress-tasks').innerHTML = "";
 	document.getElementById('progress-tasks').appendChild(progress);
 }
+function backToIndex() {
+    location.href = "index.html";
+
+
+}
