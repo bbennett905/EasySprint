@@ -123,6 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		};
 		firebase.database().ref('docs/' + docid + '/userStories').once('value', buildUserStoriesTable);
+		//Sets up the listener for anything that has to do with generating report data
+		generateReport();
 	}
 });
 
@@ -855,4 +857,62 @@ function isUserStorySnapshotChanged(snapshot) {
 	lastUserStoriesSize = count;
 	lastCriteriaSize = criteriaCountList;
 	return isDifferent;
+}
+
+function generateReport() {
+	firebase.database.ref('docs/' + docid + '/userStories').on('value', function(snapshot) {
+		//Index is person ID, val is # hours
+		var estHoursById = [];
+		var estHoursCompleted = 0;
+		var estHoursNotStarted = 0;
+		var estHoursInProgress = 0;
+		var estHoursNeedHelp = 0;
+		var estHoursFailed = 0;
+		var tasksCompleted = 0;
+		var tasksNotStarted = 0;
+		var tasksInProgress = 0;
+		var tasksNeedHelp = 0;
+		var tasksFailed = 0;
+
+		snapshot.forEach(function(innerSnap) {
+			//Looping through stories
+
+			innerSnap.child('tasks').forEach(function(snap) {
+				//Looping through tasks
+				var hours = snap.child('estimatedTime').val(); //should be an int
+				if (null == estHoursById[snap.child('assignedTo').val()]) {
+					estHoursById[snap.child('assignedTo').val()] = 0;
+				}
+				estHoursById[snap.child('assignedTo').val()] += hours;
+				if (snap.child('progress').val() == 'complete') {
+					estHoursCompleted += hours;
+					tasksCompleted++;
+				} else if (snap.child('progress').val() == 'inprogress') {
+					estHoursInProgress += hours;
+					tasksInProgress++;
+				} else if (snap.child('progress').val() == 'notstarted') {
+					estHoursNotStarted += hours;
+					tasksNotStarted++;
+				} else if (snap.child('progress').val() == 'failed') {
+					estHoursFailed += hours;
+					tasksFailed++;
+				} else if (snap.child('progress').val() == 'needhelp') {
+					estHoursNeedHelp += hours;
+					tasksNeedHelp++;
+				}
+			});
+		});
+
+		var completedTime = estHoursCompleted;
+		var notCompletedTime = estHoursInProgress + estHoursNeedHelp + estHoursNotStarted;
+		var failedTime = estHoursFailed;
+		var completedTasks = tasksCompleted;
+		var notCompletedTasks = tasksInProgress + tasksNeedHelp + taskssNotStarted;
+		var failedTasks = tasksFailed;
+
+		//TODO call functions to draw progressbars and such, using above data
+		//	Progressbar for time
+		//	Progressbar for tasks
+		//	Table breakdown of people
+	});
 }
