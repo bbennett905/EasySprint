@@ -696,8 +696,49 @@ function buildUserStoriesTable(snapshot) {
 			});
 		}
 		tasksPanel.appendChild(addBtn);
+		//Generate Acceptance Criteria Panel
+        var criteriaPanel = document.createElement('div');
+        criteriaPanel.classList.add("panel");
+        criteriaPanel.classList.add("panel-default");
+        var criteriaHead = document.createElement('div');
+        criteriaHead.classList.add("panel-heading");
+        criteriaHead.innerHTML = "Acceptance Criteria";
+        var criteriaBody = document.createElement('div');
+        criteriaBody.classList.add("panel-body");
+        var criteriaInput = document.createElement('textarea');
+        criteriaInput.classList.add("user-input");
+        criteriaInput.style = "height:50px;";
+        criteriaInput.id = "us-notes-" + innerSnap.key;
+        criteriaInput.placeholder = "Add any Acceptance Criteria here";
+        criteriaInput.datatype = "text";
+        criteriaInput.readonly = true;
+        criteriaInput.ondblclick = function() {
+            this.readOnly = false;
+        };
+        criteriaInput.onblur = function() {
+            this.readOnly = true;
+        };
+        criteriaInput.value = innerSnap.child('notes').val();
+        criteriaInput.oninput = function () {
+        	//TODO Edit this to go to acceptance criteria
+            //firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/notes').set(this.value);
+        };
+        var addCriteria = document.createElement("button");
+        addCriteria.type = "button";
+        addCriteria.classList += "btn btn-success btn-block btn-sm";
+        addCriteria.innerHTML = "<span class=\"glyphicon glyphicon-plus\"></span> Add an Acceptance Criteria";
+        addCriteria.onclick = function() {
+
+        };
+        criteriaBody.appendChild(criteriaInput);
+        criteriaPanel.appendChild(criteriaHead);
+        criteriaPanel.appendChild(criteriaBody);
+        criteriaPanel.appendChild(addCriteria);
+
+
 		div.appendChild(tasksPanel);
-		list.appendChild(div);
+        div.appendChild(criteriaPanel);
+        list.appendChild(div);
 	});
 	
 	if (!isUserStoriesUpdateRegistered) {
