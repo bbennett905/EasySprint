@@ -859,7 +859,8 @@ function isUserStorySnapshotChanged(snapshot) {
 	lastCriteriaSize = criteriaCountList;
 	return isDifferent;
 }
-function generatePeopleReportTable() {
+
+function generatePeopleReportTable(actHoursById, completedHoursById, incompleteHoursById, failedHoursByIds) {
 	var reportDiv = document.getElementById("report");
     var peoplePanel = document.createElement("div");
     peoplePanel.classList.add("panel");
@@ -884,68 +885,78 @@ function generatePeopleReportTable() {
 	peopleHeadIncomplete.innerHTML ="Incomplete Hours";
     var peopleHeadFailed = document.createElement("div");
     peopleHeadFailed.classList.add("col-sm-2");
-    peopleHeadFailed.innerHTML="Failed  Hours";
+    peopleHeadFailed.innerHTML="Failed Hours";
 
     peopleHeadRow.appendChild(peopleHeadTitle);
     peopleHeadRow.appendChild(peopleHeadComplete);
     peopleHeadRow.appendChild(peopleHeadIncomplete);
     peopleHeadRow.appendChild(peopleHeadFailed);
-    peopleHeadRow.appendChild(peopleHeadAct);
-    peoplePanel.appendChild(peopleHeadRow);
-    //var tasksBody = document.createElement("div");
-    //tasksBody.classList.add("panel-body");
-    var peopleBody = document.createElement("div");
-    peopleBody.classList.add("panel-body");
-    var peopleRow = document.createElement("div");
-    peopleRow.classList.add("row");
-    var personName = document.createElement("div");
-    personName.classList.add("col-sm-4");
-    personName.classList.add("bg-primary");
-    //insert name here
-    personName.innerHTML ="Kevin";
-    var personComplete = document.createElement("div");
-    personComplete.classList.add("col-sm-2");
-    personComplete.classList.add("bg-success");
+	peopleHeadRow.appendChild(peopleHeadAct);
+	peopleHead.appendChild(peopleHeadRow);
+	peoplePanel.appendChild(peopleHead);
+	
+	firebase.database().ref('docs/' + docid + '/people').once('value', function(snapshot) {
+		snapshot.forEach(function(innerSnap) {
+			var id = parseInt(innerSnap.key);
+			var name = innerSnap.child('name').val();
 
-    //insert complete hours here
-    personComplete.classList.add("text-center");
-    personComplete.innerHTML = "30";
-    var personAct = document.createElement("div");
-    personAct.classList.add("col");
-    personAct.classList.add("bg-info");
-    personAct.classList.add("text-center");
-    //peopleHeadAct.classList.add("hidden-xs");
-    //peopleHeadAct.classList.add("hidden-sm");
-    //insert actual hours here
-    personAct.innerHTML = "7";
-    var personIncomplete = document.createElement("div");
-    personIncomplete.classList.add("col-sm-2");
-    personIncomplete.classList.add("bg-warning");
-    personIncomplete.classList.add("text-center");
-    //insert incomplete hours here
-    personIncomplete.innerHTML ="14";
-    var personFailed = document.createElement("div");
-    personFailed.classList.add("col-sm-2");
-    personFailed.classList.add("bg-danger");
-    personFailed.classList.add("text-center");
-    //insert failed hours here
-    personFailed.innerHTML="3";
-    peopleRow.appendChild(personName);
-    peopleRow.appendChild(personComplete);
-    peopleRow.appendChild(personIncomplete);
-    peopleRow.appendChild(personFailed);
-    peopleRow.appendChild(personAct);
-    peopleBody.appendChild(peopleRow);
+			//var tasksBody = document.createElement("div");
+			//tasksBody.classList.add("panel-body");
+			var peopleBody = document.createElement("div");
+			peopleBody.classList.add("panel-body");
+			var peopleRow = document.createElement("div");
+			peopleRow.classList.add("row");
+			var personName = document.createElement("div");
+			personName.classList.add("col-sm-4");
+			personName.classList.add("bg-primary");
+			//insert name here
+			personName.innerHTML = name;
+			var personComplete = document.createElement("div");
+			personComplete.classList.add("col-sm-2");
+			personComplete.classList.add("bg-success");
 
+			//insert complete hours here
+			personComplete.classList.add("text-center");
+			personComplete.innerHTML = completedHoursById[id];
+			var personAct = document.createElement("div");
+			personAct.classList.add("col");
+			personAct.classList.add("bg-info");
+			personAct.classList.add("text-center");
 
-    peoplePanel.appendChild(peopleBody);
-    reportDiv.appendChild(peoplePanel);
+			//insert actual hours here
+			personAct.innerHTML = actHoursById[id];
+			var personIncomplete = document.createElement("div");
+			personIncomplete.classList.add("col-sm-2");
+			personIncomplete.classList.add("bg-warning");
+			personIncomplete.classList.add("text-center");
+			//insert incomplete hours here
+			personIncomplete.innerHTML = incompleteHoursById[id];
+			var personFailed = document.createElement("div");
+			personFailed.classList.add("col-sm-2");
+			personFailed.classList.add("bg-danger");
+			personFailed.classList.add("text-center");
+			//insert failed hours here
+			personFailed.innerHTML= failedHoursByIds[id];
+			peopleRow.appendChild(personName);
+			peopleRow.appendChild(personComplete);
+			peopleRow.appendChild(personIncomplete);
+			peopleRow.appendChild(personFailed);
+			peopleRow.appendChild(personAct);
+			peopleBody.appendChild(peopleRow);
+
+			peoplePanel.appendChild(peopleBody);
+			reportDiv.appendChild(peoplePanel);
+		});
+	});
 }
 
 function generateReport() {
 	firebase.database().ref('docs/' + docid + '/userStories').on('value', function(snapshot) {
 		//Index is person ID, val is # hours
-		var estHoursById = [];
+		var estHoursFailedById = [];
+		var estHoursCompletedById = [];
+		var estHoursIncompleteById = [];
+		var actHoursById = [];
 		var estHoursCompleted = 0;
 		var estHoursNotStarted = 0;
 		var estHoursInProgress = 0;
@@ -963,24 +974,38 @@ function generateReport() {
 			innerSnap.child('tasks').forEach(function(snap) {
 				//Looping through tasks
 				var hours = snap.child('estimatedTime').val(); //should be an int
-				if (null == estHoursById[snap.child('assignedTo').val()]) {
-					estHoursById[snap.child('assignedTo').val()] = 0;
+				if (null == estHoursFailedById[snap.child('assignedTo').val()]) {
+					estHoursFailedById[snap.child('assignedTo').val()] = 0;
 				}
-				estHoursById[snap.child('assignedTo').val()] += hours;
+				if (null == estHoursCompletedById[snap.child('assignedTo').val()]) {
+					estHoursCompletedById[snap.child('assignedTo').val()] = 0;
+				}
+				if (null == estHoursIncompleteById[snap.child('assignedTo').val()]) {
+					estHoursIncompleteById[snap.child('assignedTo').val()] = 0;
+				}
+				if (null == actHoursById[snap.child('assignedTo').val()]) {
+					actHoursById[snap.child('assignedTo').val()] = 0;
+				}
+				actHoursById[snap.child('assignedTo').val()] += snap.child('actualTime').val();
 				if (snap.child('progress').val() == 'complete') {
 					estHoursCompleted += hours;
+					estHoursCompletedById[snap.child('assignedTo').val()] += hours;
 					tasksCompleted++;
 				} else if (snap.child('progress').val() == 'inprogress') {
 					estHoursInProgress += hours;
+					estHoursIncompleteById[snap.child('assignedTo').val()] += hours;
 					tasksInProgress++;
 				} else if (snap.child('progress').val() == 'notstarted') {
 					estHoursNotStarted += hours;
+					estHoursIncompleteById[snap.child('assignedTo').val()] += hours;
 					tasksNotStarted++;
 				} else if (snap.child('progress').val() == 'failed') {
 					estHoursFailed += hours;
+					estHoursFailedById[snap.child('assignedTo').val()] += hours;
 					tasksFailed++;
 				} else if (snap.child('progress').val() == 'needhelp') {
 					estHoursNeedHelp += hours;
+					estHoursIncompleteById[snap.child('assignedTo').val()] += hours;
 					tasksNeedHelp++;
 				}
 			});
@@ -999,6 +1024,7 @@ function generateReport() {
 		//	Progressbar for tasks
 		generateTasksProgressbar(completedTasks, notCompletedTasks, failedTasks);
 		//	Table breakdown of people
+		generatePeopleReportTable(actHoursById, estHoursCompletedById, estHoursIncompleteById, estHoursFailedById);
 	});
 }
 
