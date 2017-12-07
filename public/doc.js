@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 				});
 				max++;
-				firebase.database().ref('docs/' + docid + '/userStories/' + max + '/title').set("Unnamed User Story");
+				firebase.database().ref('docs/' + docid + '/userStories/' + max + '/title').set("Name user story here");
 			});
 		};
 		firebase.database().ref('docs/' + docid + '/userStories').once('value', buildUserStoriesTable);
@@ -311,7 +311,6 @@ function updatePeopleTable(snapshot) {
 		});
 	}
 }
-
 var isUserStoriesUpdateRegistered = false;
 function buildUserStoriesTable(snapshot) {
 	var list = document.getElementById('userstories-list');
@@ -425,13 +424,14 @@ function buildUserStoriesTable(snapshot) {
 		tasksPanel.appendChild(tasksHead);
 		var tasksBody = document.createElement("div");
 		tasksBody.classList.add("panel-body");
-		
+		//creation of each individual row
 		innerSnap.child('tasks').forEach(function(snap) {
 			var row = document.createElement("div");
 			row.classList += "row";
 
 			var taskTitle = document.createElement("div");
 			taskTitle.classList += "col-md-5 col-xs-9";
+			//task title column
 			var titleInput = document.createElement("input");
 			titleInput.id = "us-task-title-" + innerSnap.key + "-" + snap.key;
 			titleInput.classList += "user-input";
@@ -449,6 +449,7 @@ function buildUserStoriesTable(snapshot) {
 			titleInput.placeholder = "Task";
 			titleInput.style = "width:100%;";
 			taskTitle.appendChild(titleInput);
+			//
 			var taskEst = document.createElement("div");
 			taskEst.classList += "col-xs-2";
 			var estInput = document.createElement("input");
@@ -469,6 +470,7 @@ function buildUserStoriesTable(snapshot) {
 				}
 				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/estimatedTime').set(val);
 			};
+			//generate Estimated Time column
 			estInput.placeholder = "#";
 			estInput.style = "width:100%;";
 			taskEst.appendChild(estInput);
@@ -492,14 +494,97 @@ function buildUserStoriesTable(snapshot) {
 				}
 				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/actualTime').set(val);
 			};
+			//Generate Actual time column
 			actInput.placeholder = "#";
 			actInput.style = "width:100%;";
 			taskAct.appendChild(actInput);
+			//generate aasigned dropdown button
 			var taskAssign = document.createElement("div");
 			taskAssign.classList += "col-sm-2 hidden-xs hidden-sm";
 			// TODO dropdown, with built
+
+
+
+
+
+
+			//Generate Status Dropdown
 			var taskProgress = document.createElement("div");
-			taskProgress.classList += "col-sm-1 hidden-xs hidden-sm";
+			taskProgress.classList += "col-sm-1 hidden-xs hidden-sm dropdown";
+			var taskProgressButton = document.createElement("button");
+			taskProgressButton.classList += "btn-xs btn-active bg-active dropdown-toggle";
+			taskProgressButton.type += "button";
+			taskProgressButton.setAttribute("data-toggle","dropdown");
+			taskProgressButton.innerHTML = "Status <span class= \"caret></span>";
+			var taskProgressDropdown = document.createElement("ul");
+			taskProgressDropdown.classList += "dropdown-menu";
+
+			//Generate elements within dropdown
+			//complete element of dropdown
+			var complete = document.createElement("li");
+			complete.classList += "bg-success";
+			var aComplete = document.createElement("a");
+			aComplete.innerHTML = "Complete";
+			aComplete.onclick =function (ev) {
+                taskProgressButton.classList = "btn-xs btn-active bg-success dropdown-toggle";
+                taskProgressButton.innerHTML = "Complete <span class= \"caret></span>";
+
+            };
+			complete.appendChild(aComplete);
+
+			//inProgress element of dropdown
+			var inProgress = document.createElement("li");
+			inProgress.classList += "bg-active";
+			var aInProgress = document.createElement("a");
+			aInProgress.innerHTML ="In Progress";
+			aInProgress.onclick =function (ev) {
+				taskProgressButton.classList = "btn-xs btn-active bg-active dropdown-toggle";
+                taskProgressButton.innerHTML = "In Progress <span class= \"caret></span>";
+
+            };
+			inProgress.appendChild(aInProgress);
+
+			//help needed element of dropdown
+			var helpNeeded = document.createElement("li");
+			helpNeeded.classList += "bg-warning";
+			var aHelpNeeded = document.createElement("a");
+			aHelpNeeded.innerHTML = "Help Needed";
+            aHelpNeeded.onclick =function (ev) {
+                taskProgressButton.classList = "btn-xs btn-warning bg-active dropdown-toggle";
+                taskProgressButton.innerHTML = "Help Needed <span class= \"caret></span>";
+
+            };
+            helpNeeded.appendChild(aHelpNeeded);
+			//not started element of dropdown
+            var notStarted = document.createElement("li");
+            notStarted.classList += "bg-primary";
+            var aNotStarted = document.createElement("a");
+            aNotStarted.innerHTML = "Not Started";
+            aNotStarted.onclick =function (ev) {
+                taskProgressButton.classList = "btn-xs btn-primary bg-active dropdown-toggle";
+                taskProgressButton.innerHTML = "Not Started <span class= \"caret></span>";
+
+            };
+            notStarted.appendChild(aNotStarted);
+			//failed element of dropdown
+            var failed = document.createElement("li");
+            failed.classList += "bg-danger";
+            var aFailed = document.createElement("a");
+            aFailed.innerHTML = "Failed";
+            aFailed.onclick =function (ev) {
+                taskProgressButton.classList = "btn-xs btn-danger bg-active dropdown-toggle";
+                taskProgressButton.innerHTML = "Failed <span class= \"caret></span>";
+            };
+            failed.appendChild(aFailed);
+
+            taskProgressDropdown.appendChild(complete);
+            taskProgressDropdown.appendChild(inProgress);
+            taskProgressDropdown.appendChild(helpNeeded);
+            taskProgressDropdown.appendChild(notStarted);
+            taskProgressDropdown.appendChild(failed);
+
+            taskProgress.appendChild(taskProgressButton);
+            taskProgress.appendChild(taskProgressDropdown);
 			// TODO
 			var taskDel = document.createElement("div");
 			taskDel.classList += "col-xs-1";
