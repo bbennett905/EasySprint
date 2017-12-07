@@ -553,18 +553,9 @@ function buildUserStoriesTable(snapshot) {
 					taskAssignButton.innerHTML = s.child('name').val();
 				}
 			});
-            
-
-
-
-
-
 
 			taskAssign.appendChild(taskAssignButton);
 			taskAssign.appendChild(taskAssignDropdown);
-
-
-			// TODO dropdown, with built
 
 			//Generate Status Dropdown
 			var taskProgress = document.createElement("div");
@@ -696,48 +687,73 @@ function buildUserStoriesTable(snapshot) {
 			});
 		}
 		tasksPanel.appendChild(addBtn);
-		//Generate Acceptance Criteria Panel
-        var criteriaPanel = document.createElement('div');
-        criteriaPanel.classList.add("panel");
-        criteriaPanel.classList.add("panel-default");
-        var criteriaHead = document.createElement('div');
-        criteriaHead.classList.add("panel-heading");
-        criteriaHead.innerHTML = "Acceptance Criteria";
-        var criteriaBody = document.createElement('div');
-        criteriaBody.classList.add("panel-body");
-        var criteriaInput = document.createElement('textarea');
-        criteriaInput.classList.add("user-input");
-        criteriaInput.style = "height:50px;";
-        criteriaInput.id = "us-notes-" + innerSnap.key;
-        criteriaInput.placeholder = "Add any Acceptance Criteria here";
-        criteriaInput.datatype = "text";
-        criteriaInput.readonly = true;
-        criteriaInput.ondblclick = function() {
-            this.readOnly = false;
-        };
-        criteriaInput.onblur = function() {
-            this.readOnly = true;
-        };
-        criteriaInput.value = innerSnap.child('notes').val();
-        criteriaInput.oninput = function () {
-        	//TODO Edit this to go to acceptance criteria
-            //firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/notes').set(this.value);
-        };
+		div.appendChild(tasksPanel);
+
+		innerSnap.child('acceptanceCriteria').forEach(function(snap) {
+			//Generate Acceptance Criteria Panel
+			var criteriaPanel = document.createElement('div');
+			criteriaPanel.classList.add("panel");
+			criteriaPanel.classList.add("panel-default");
+			var criteriaHead = document.createElement('div');
+			criteriaHead.classList.add("panel-heading");
+			criteriaHead.innerHTML = "Acceptance Criteria";
+			var delCriteriaButton = document.createElement("button");
+			delCriteriaButton.type = "button";
+			delCriteriaButton.style = "float: right;";
+			delCriteriaButton.classList.add("btn");
+			delCriteriaButton.classList.add("btn-danger");
+			delCriteriaButton.classList.add("btn-xs");
+			delCriteriaButton.classList.add("peoplelist-entry");
+			delCriteriaButton.innerHTML = "<span class=\"glyphicon glyphicon-remove\"></span>";
+			delCriteriaButton.onclick = function() {
+				db.ref('docs/' + docid + '/userStories/' + innerSnap.key + '/acceptanceCriteria/' + snap.key).remove();
+			};
+			criteriaHead.appendChild(delCriteriaButton);
+			var criteriaBody = document.createElement('div');
+			criteriaBody.classList.add("panel-body");
+			var criteriaInput = document.createElement('textarea');
+			criteriaInput.classList.add("user-input");
+			criteriaInput.style = "height:50px;";
+			criteriaInput.id = "us-criteria-" + innerSnap.key + "-" + snap.key;
+			criteriaInput.placeholder = "Add any Acceptance Criteria here";
+			criteriaInput.datatype = "text";
+			criteriaInput.readonly = true;
+			criteriaInput.ondblclick = function() {
+				this.readOnly = false;
+			};
+			criteriaInput.onblur = function() {
+				this.readOnly = true;
+			};
+			criteriaInput.value = snap.val();
+			criteriaInput.oninput = function () {
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/acceptanceCriteria/' + snap.key).set(this.value);
+			};
+			criteriaBody.appendChild(criteriaInput);
+			criteriaPanel.appendChild(criteriaHead);
+			criteriaPanel.appendChild(criteriaBody);
+			div.appendChild(criteriaPanel);
+		});
+		
         var addCriteria = document.createElement("button");
         addCriteria.type = "button";
         addCriteria.classList += "btn btn-success btn-block btn-sm";
         addCriteria.innerHTML = "<span class=\"glyphicon glyphicon-plus\"></span> Add an Acceptance Criteria";
         addCriteria.onclick = function() {
-
+			var max = 0;
+			firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/acceptanceCriteria').once('value', function(s) {
+				s.forEach(function(snap) {
+					if (parseInt(snap.key) > max) {
+						max = parseInt(snap.key);
+					}
+				});
+				max++;
+				//max is the new id to use
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/acceptanceCriteria/' + max).set("Empty acceptance criteria");
+			});
         };
-        criteriaBody.appendChild(criteriaInput);
-        criteriaPanel.appendChild(criteriaHead);
-        criteriaPanel.appendChild(criteriaBody);
-        criteriaPanel.appendChild(addCriteria);
+        
+        div.appendChild(addCriteria);
 
-
-		div.appendChild(tasksPanel);
-        div.appendChild(criteriaPanel);
         list.appendChild(div);
 	});
 	
@@ -788,6 +804,10 @@ function updateUserStoriesTable(snapshot) {
 					status.classList = "btn-xs btn-warning bg-active dropdown-toggle";
                 	status.innerHTML = "Need Help <span class= \"caret></span>";
 				}
+			});
+			innerSnap.child('acceptanceCriteria').forEach(function(snap) {
+				var criteria = document.getElementById("us-criteria-" + innerSnap.key + "-" + snap.key);
+				criteria.value = snap.val();
 			});
 		});
 	}
