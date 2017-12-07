@@ -91,7 +91,7 @@
                   ".validate": "newData.isNumber()"
                 },
                 "assignedTo": {
-                  ".validate": "newData.isNumber() && root.child('docs/' + $docid + '/people').hasChild(newData.val())"
+                  ".validate": "newData.isNumber()"// && root.child('docs/' + $docid + '/people').hasChild(newData.val())"
                 },
                 "progress": {
                   //Check that not only is it a string, but its one of these possibilities

@@ -1,4 +1,3 @@
-//TODO when refreshing after login, everything is hidden
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
 var db = firebase.database();
@@ -217,7 +216,16 @@ function buildPeopleTable(snapshot) {
 		n.classList.add("user-input");
 		n.classList.add("peoplelist-entry");
 		n.readOnly = true;
-		
+		n.ondblclick = function() {
+			this.readOnly=false;
+		};
+		n.onblur = function() {
+			this.readOnly=true;
+		};
+		n.value = innerSnap.child('name').val();
+		n.oninput = function () {
+			firebase.database().ref('docs/' + docid + '/people/' + innerSnap.key + '/name').set(this.value);
+		};
 		var e = document.createElement("input");
 		e.id = "p-e-" + innerSnap.key;
 		e.classList.add("user-input");
@@ -502,40 +510,50 @@ function buildUserStoriesTable(snapshot) {
 			var taskAssign = document.createElement("div");
 			taskAssign.classList += "col-sm-2 hidden-xs hidden-sm dropdown";
 			var taskAssignButton = document.createElement("button");
-			taskAssignButton.classList +=  "btn-xs btn-info bg-info dropdown-toggle";
+			taskAssignButton.classList +=  "btn-xs btn-info bg-warning dropdown-toggle";
 			taskAssignButton.type += "button";
 			taskAssignButton.setAttribute("data-toggle", "dropdown");
-			taskAssignButton.innerHTML ="Assign to : <span></span>";
+			taskAssignButton.innerHTML ="Not Assigned <span></span>";
+			taskAssignButton.id = "us-task-assign-" + innerSnap.key + "-" + snap.key;
 			var taskAssignDropdown = document.createElement("ul");
 			taskAssignDropdown.classList += "dropdown-menu";
 			//generate names of users within dropdown
 
-			var count =0;
-            snapshot.forEach(function(otherSnap) {
-                count++;
-                var name = otherSnap.child('name').val();
-                var id = otherSnap.key;
-                var user = document.createElement("li");
-                var aUser = document.createElement("a");
-                aUser.innerHTML = name;
-                aUser.onclick = function (ev) {
-                	taskAssignButton.innerHTML = name;
-				};
-                user.setAttribute("id", id);
-                user.appendChild(aUser);
-                taskAssignDropdown.appendChild(user);
-            });
-            /*
-            var user = document.createElement("li");
-            var aUser = document.createElement("a");
-            aUser.innerHTML = "Kevin";
-            aUser.onclick = function (ev) {
-                taskAssignButton.innerHTML = "Kevin";
-            };
-            user.setAttribute("id", "Kevin");
-            user.appendChild(aUser);
-            taskAssignDropdown.appendChild(user);
-			*/
+			var count = 0;
+			firebase.database().ref('docs/' + docid + '/people').once('value', function(s) {
+				s.forEach(function(otherSnap) {
+					
+					count++;
+					var name = otherSnap.child('name').val();
+					var id = otherSnap.key;
+					var user = document.createElement("li");
+					var aUser = document.createElement("a");
+					aUser.innerHTML = name;
+					aUser.onclick = function (ev) {
+						firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + snap.key + '/assignedTo').set(parseInt(id));
+					};
+					user.setAttribute("id", id);
+					user.appendChild(aUser);
+					taskAssignDropdown.appendChild(user);
+				});
+				if (count = 0) {
+					var name = "No users!";
+					var user = document.createElement("li");
+					var aUser = document.createElement("a");
+					aUser.innerHTML = name;
+					user.setAttribute("id", id);
+					user.appendChild(aUser);
+					taskAssignDropdown.appendChild(user);
+				}
+			});
+			firebase.database().ref('docs/' + docid + '/people/' + snap.child('assignedTo').val()).once('value', function(s) {
+				if (s.child('name').val() == null) {
+					taskAssignButton.innerHTML = "Not Assigned";
+				} else {
+					taskAssignButton.innerHTML = s.child('name').val();
+				}
+			});
+            
 
 
 
@@ -635,8 +653,6 @@ function buildUserStoriesTable(snapshot) {
             taskProgress.appendChild(taskProgressButton);
             taskProgress.appendChild(taskProgressDropdown);
 
-			//TODO assign dropdown
-
 			var taskDel = document.createElement("div");
 			taskDel.classList += "col-xs-1";
 			var taskDelBtn = document.createElement("button");
@@ -676,6 +692,7 @@ function buildUserStoriesTable(snapshot) {
 				max++;
 				//max is the new id to use
 				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + max + '/title').set("Task Title");
+				firebase.database().ref('docs/' + docid + '/userStories/' + innerSnap.key + '/tasks/' + max + '/progress').set("notstarted");
 			});
 		}
 		tasksPanel.appendChild(addBtn);
@@ -705,7 +722,14 @@ function updateUserStoriesTable(snapshot) {
 				est.value = snap.child('estimatedTime').val();
 				var act = document.getElementById("us-task-act-" + innerSnap.key + "-" + snap.key);
 				act.value = snap.child('actualTime').val();
-				// TODO assign
+				var assign = document.getElementById("us-task-assign-" + innerSnap.key + "-" + snap.key);
+				firebase.database().ref('docs/' + docid + '/people/' + snap.child('assignedTo').val()).once('value', function(s) {
+					if (s.child('name').val() == null) {
+						assign.innerHTML = "Not Assigned";
+					} else {
+						assign.innerHTML = s.child('name').val();
+					}
+				});
 				var status = document.getElementById("us-task-progress-" + innerSnap.key + "-" + snap.key);
 				if (snap.child('progress').val() == 'complete') {
 					status.classList = "btn-xs btn-success bg-active dropdown-toggle";
